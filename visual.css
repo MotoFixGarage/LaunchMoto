@@ -56,16 +56,25 @@ h1, h2, a, p{
     flex-direction: column;
     justify-content: center;
     margin: 20px 0px 20px 0;
+    
+}
+.baseinf1{
+max-width: 85%;
+align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    display: flex;
 }
 .firm{
     margin-bottom: 0px;
     padding-bottom: 0px;
     height: auto;
-
+    font-size: clamp(2rem, 8vw, 5rem);
 }
 .slog{
     margin-top: 0px;
     padding-top: 0px;
+    text-align: center;
 
 }
 
@@ -89,6 +98,11 @@ h1, h2, a, p{
     align-items: center;
     justify-content: center;
 }
+@media (max-width: 768px){
+    .but{
+        flex-direction: column;
+    }
+}
 .base h1, p{
     color: white;
     text-align: center;
@@ -104,7 +118,7 @@ h1, h2, a, p{
 }
 .but_tel, .but_info{
     border: 2px solid white;
-    padding: 0.5vw 1.5vw;
+    padding: 10px 10px;
     border-radius: 30vw;
     background-color: rgba(255, 255, 255, 30%);
     margin: 5px;
@@ -119,6 +133,8 @@ h1, h2, a, p{
 }
 .but_info{
     background-color: rgba(255, 255, 255, 100%);
+    padding: 10px 16px;
+
 }
 .but_info a{
     color: #000;
