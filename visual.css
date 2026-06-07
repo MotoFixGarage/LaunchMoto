@@ -21,6 +21,9 @@ h1, h2, a, p{
     display: flex;
     
 }
+body{
+    box-sizing: border-box;
+}
 .but_info{
     display: flex;
     font-family: comfortaa;
@@ -82,11 +85,25 @@ align-items: center;
     background-image: url('lm.png');
     
     background-repeat: no-repeat;
-
+    height: 97vh;
     background-attachment: fixed;
     background-size: cover;
     background-position: center center;
-    border-radius: 1.1vw;
+    border-radius: 31px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px;
+}
+.baseR {
+    background-image: url('lm.png');
+    
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center center;
+    border-radius: 31px;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -162,6 +179,7 @@ align-items: center;
 .image img{
     border-radius: 0.7vw;
     flex-shrink: 0;
+    border-radius: 20px;
 }
 tr p{
     max-width: 250px;
