@@ -85,7 +85,7 @@ align-items: center;
     background-image: url('lm.png');
     
     background-repeat: no-repeat;
-    height: 97vh;
+    min-height: 97svh;
     background-attachment: fixed;
     background-size: cover;
     background-position: center center;

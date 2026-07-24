@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LaunchMoto</title>
     <link rel="stylesheet" href="visual.css">
+    <script src='script.js'></script>
 </head>
 <body>
     <div class="baseR">
@@ -25,6 +26,20 @@
     <h2 class="adres">Адрес: Мамонтовка Набережная 39</h2>
     </div>
     </div>
+    <div class="crm">
+  <input type="text" id="searchInput" placeholder="Поиск по имени или телефону">
+  <div id="clientsList"></div>
+
+  <h3>Добавить клиента</h3>
+  <input type="text" id="name" placeholder="Имя">
+  <input type="text" id="phone" placeholder="Телефон">
+  <input type="text" id="model" placeholder="Модель мото">
+  <input type="text" id="work" placeholder="Какие работы">
+  <input type="number" id="sum" placeholder="Сумма">
+  <input type="text" id="comment" placeholder="Комментарий">
+  <button id="addBtn">Добавить</button>
+</div>
+
     <table class="price" id="infoll">
     <tr>
         <th><p>наименование</p></th>
