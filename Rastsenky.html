@@ -5,13 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LaunchMoto</title>
     <link rel="stylesheet" href="visual.css">
-    <script src='script.js'></script>
+    <script src='script.js' defer></script>
 </head>
 <body>
     <div class="baseR">
         <div class="top">
             <div class="lmlogo"></div>
             <div class="info"><a class="tel2" href="tel:+79850569450"><p>+7 (985) 056-94-50</p></a></div>
+            <div class="loginDiv"><input type="password" class="adminPass" id="adminPass" placeholder="Пароль администратора">
+            <button id="loginBtn" class="loginBtn"></button></div>
         </div>
         <div class="baseinf">
             <div class="baseinf1">
@@ -19,25 +21,33 @@
         <h2 class="slog">ремонт, за который не стыдно</h2>
         
         <div class="but" style="margin-top: 50px;">
-            <div class="but_info" onclick="document.getElementById('infoll').scrollIntoView({behavior:'smooth'})">расценки</div>
+            <div class="but_info" onclick="window.location.href='index.html'">главная страница</div>
             <div class="but_tel"><a href="tel:+79850569450">позвонить</a></div>
             
     </div>
     <h2 class="adres">Адрес: Мамонтовка Набережная 39</h2>
     </div>
     </div>
-    <div class="crm">
-  <input type="text" id="searchInput" placeholder="Поиск по имени или телефону">
-  <div id="clientsList"></div>
+    <div id="adminLogin" class="admin-login">
+  
+</div>
+
+    <div class="crm" id="crmPanel" style="display:none;">
+  
 
   <h3>Добавить клиента</h3>
   <input type="text" id="name" placeholder="Имя">
   <input type="text" id="phone" placeholder="Телефон">
   <input type="text" id="model" placeholder="Модель мото">
+  <input type="date" id="date" placeholder="Dead line">
   <input type="text" id="work" placeholder="Какие работы">
   <input type="number" id="sum" placeholder="Сумма">
   <input type="text" id="comment" placeholder="Комментарий">
-  <button id="addBtn">Добавить</button>
+  <div class="adddiv"><button id="addBtn" class="addBtn">Добавить</button></div>
+  
+  <div class="sidiv"><input type="text" id="searchInput" class="si" placeholder="Поиск по имени или телефону"></div>
+  
+  <div id="clientsList" class="clientsList"></div>
 </div>
 
     <table class="price" id="infoll">

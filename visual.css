@@ -21,6 +21,34 @@ h1, h2, a, p{
     display: flex;
     
 }
+.loginDiv{
+    width: 100%;
+    display: flex;
+    justify-content: right;
+    margin-top: 0px;
+}
+.adminPass{
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    border: rgba(98, 98, 98, 0.409) 1px solid;
+    padding: 10px;
+    color: #ffffff96;
+    font-size: 16px;
+    margin: 5px;
+    
+}
+.loginBtn{
+    background-image: url('login.png');
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    border: rgba(98, 98, 98, 0.409) 1px solid;
+    height: 40px;
+    width: 40px;
+    background-size: 80%;
+    margin: 5px;
+    background-position: center center;
+
+}
 body{
     box-sizing: border-box;
 }
@@ -28,7 +56,49 @@ body{
     display: flex;
     font-family: comfortaa;
 }
-
+.crm input{
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    border: rgba(98, 98, 98, 0.409) 1px solid;
+    padding: 10px;
+    color: #ffffff96;
+    font-size: 16px;
+    margin-top: 30px;
+}
+.adddiv{
+    justify-content: center;
+    display: flex;
+}
+.addBtn{
+    border: 2px solid white;
+    padding: 10px 10px;
+    border-radius: 25px;
+    background-color: rgba(255, 255, 255, 30%);
+    margin-top: 30px;
+    font-size: 12pt;
+    transition: transform 0.1s ease;
+    width: 250px;
+    color: #ffffffa1;
+}
+.sidiv{
+    display: flex;
+    justify-content: center;
+}
+.si{
+    width: 350px;
+    text-align: center;
+}
+.clientsList{
+    display: flex;
+}
+.clientsList div{
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    border: rgba(98, 98, 98, 0.409) 1px solid;
+    margin: 30px;
+    text-align: center;
+}
 .top{
     height: 50px;
     width: 100%;
@@ -47,6 +117,7 @@ body{
     height: 50px;
     margin-top: 15px;
     margin-left: 10px;
+    white-space: nowrap;
 }
 .baseinf{
     background-color: rgba(0, 0, 0, 0.4);
@@ -190,4 +261,7 @@ table{
     border-radius: 25px;
     background-color: rgba(0, 0, 0, 0.398);
     width: 100%;
+}
+.clientsList{
+    display: flex;
 }
