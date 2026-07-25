@@ -31,7 +31,8 @@ h1, h2, a, p{
     background-color: rgba(0, 0, 0, 0.4);
     border-radius: 25px;
     border: rgba(98, 98, 98, 0.409) 1px solid;
-    padding: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
     color: #ffffff96;
     font-size: 16px;
     margin: 5px;
@@ -56,6 +57,9 @@ body{
     display: flex;
     font-family: comfortaa;
 }
+.top{
+    align-items: center;
+}
 .crm input{
     background-color: rgba(0, 0, 0, 0.4);
     border-radius: 25px;
@@ -68,6 +72,15 @@ body{
 .adddiv{
     justify-content: center;
     display: flex;
+}
+.info{
+    height: 30px;
+    margin-top: 0px;
+    padding-top: 0px;
+}
+.info p{
+    margin: 0;
+    padding: 0;
 }
 .addBtn{
     border: 2px solid white;
@@ -98,16 +111,17 @@ body{
     border: rgba(98, 98, 98, 0.409) 1px solid;
     margin: 30px;
     text-align: center;
+    align-items: center;
 }
 .top{
-    height: 50px;
+    min-height: 30px;
     width: 100%;
     background-color: rgba(0, 0, 0, 0.4);
     border-radius: 25px;
     border: rgba(98, 98, 98, 0.409) 1px solid;
     display: flex;
     margin-top: 0;
-    padding-top: 0;
+    padding: 0;
 }
 .tel2 p{
     margin: auto;
@@ -115,7 +129,7 @@ body{
     justify-content: center;
     display: flex;
     height: 50px;
-    margin-top: 15px;
+    margin-top: 7px;
     margin-left: 10px;
     white-space: nowrap;
 }
@@ -192,6 +206,10 @@ align-items: center;
     }
     .top{
         flex-wrap: wrap;
+
+    }
+    .loginDiv{
+        justify-content: center;
     }
 }
 .base h1, p{

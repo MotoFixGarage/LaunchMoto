@@ -55,8 +55,10 @@ function renderClients(clients) {
     card.className = 'client-card';
     card.innerHTML = `
       <p><b>${c['Имя']}</b> </p>
-      <a class="tel2" href="tel:+79850569450"><p>${c['Телефон']}</p><a/>
-      <p>${c['Модель']} | ${c['Работы']} | ${c['Сумма']} ₽</p>
+      <a href="tel:${c['Телефон']}"><p>${c['Телефон']}</p><a/>
+      <p>${c['Модель']}</p>
+      <p>${c['Работы']}</p>
+      <p>${c['Сумма']} ₽</p>
       <p>${c['Комментарий'] || ''}</p>
     `;
     clientsList.appendChild(card);
@@ -112,7 +114,7 @@ addBtn.addEventListener('click', async () => {
     document.getElementById(id).value = '';
   });
 
-  loadClients(searchInput.value.trim()); // обновляем список с учётом текущего поиска
+   // обновляем список с учётом текущего поиска
 });
 
 // Если ключ уже сохранён с прошлого раза (в этой же вкладке) — сразу пробуем войти
