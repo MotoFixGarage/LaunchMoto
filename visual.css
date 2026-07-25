@@ -190,6 +190,9 @@ align-items: center;
     .but{
         flex-direction: column;
     }
+    .top{
+        flex-direction: column;
+    }
 }
 .base h1, p{
     color: white;
