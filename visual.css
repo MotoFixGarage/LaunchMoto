@@ -126,7 +126,7 @@ body{
     justify-content: center;
     padding: 10px;
 }
-.baseinf{
+.baseinf, .addTable{
     background-color: rgba(0, 0, 0, 0.4);
     border-radius: 25px;
     border: rgba(98, 98, 98, 0.409) 1px solid;
@@ -209,6 +209,7 @@ body{
     transition: transform 0.3s ease;
     width: 250px;
     color: #ffffffa1;
+    margin-bottom: 15px;
 }
 
 /* Наведение/нажатие — общее для всех кнопок сразу */
@@ -228,7 +229,7 @@ body{
 /* ==========================================================
    CRM-ФОРМА (добавление и список клиентов)
    ========================================================== */
-.crm input{
+.crm input, .addTableIn input{
     background-color: rgba(0, 0, 0, 0.4);
     border-radius: 25px;
     border: rgba(98, 98, 98, 0.409) 1px solid;
@@ -236,6 +237,7 @@ body{
     color: #ffffff96;
     font-size: 16px;
     margin-top: 30px;
+    margin: 3px;
 }
 input:hover{
     background-color: rgba(255, 255, 255, 0.25);
@@ -264,7 +266,11 @@ input:hover{
     text-align: center;
     align-items: center;
 }
-
+.addTableIn{
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
 
 /* ==========================================================
    ТАБЛИЦА РАСЦЕНОК
@@ -279,13 +285,16 @@ table{
 tr p{
     max-width: 250px;
 }
+td{
+    padding: 50px;
+}
 .price-cell{
     cursor: pointer;
     transition: background-color 0.9s ease;
 }
 .price-cell:hover{
     border-radius: 25px;
-    border: rgba(98, 98, 98, 0.409) 1px solid;
+    border: rgba(98, 98, 98, 0.409) 25px solid;
     background-color: rgba(255, 255, 255, 0.15);
 }
 .price-cell:active{
@@ -295,6 +304,24 @@ tr p{
 }
 .disabled{
     cursor: default;
+}
+.price input{
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-family: Comfortaa;
+    font-size: inherit;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+td:hover,
+td:focus{
+    background-color: rgba(255, 255, 255, 0.1);
+    outline: none;
+    border-radius: 25px;
 }
 
 
