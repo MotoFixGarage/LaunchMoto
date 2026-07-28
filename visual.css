@@ -1,3 +1,6 @@
+/* ==========================================================
+   ШРИФТЫ И БАЗОВЫЕ СТИЛИ
+   ========================================================== */
 @font-face {
     font-family: comfortaa;
     src: url(Comfortaa-VariableFont_wght.ttf);
@@ -12,6 +15,25 @@ h1, h2, a, p{
     margin-bottom: 0px;
     padding-bottom: 0px;
 }
+body{
+    box-sizing: border-box;
+}
+
+
+/* ==========================================================
+   ВЕРХНЯЯ ПАНЕЛЬ (лого, телефон, форма входа)
+   ========================================================== */
+.top{
+    min-height: 30px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    border: rgba(98, 98, 98, 0.409) 1px solid;
+    display: flex;
+    align-items: center;
+    margin-top: 0;
+    padding: 0;
+}
 .lmlogo{
     background-image: url("lmlogo.png");
     background-size: cover;
@@ -19,8 +41,31 @@ h1, h2, a, p{
     height: 50px;
     width: 50px;
     display: flex;
-    
 }
+.info{
+    height: 30px;
+    margin-top: 0px;
+    padding-top: 0px;
+}
+.info p{
+    margin: 0;
+    padding: 0;
+}
+.tel2 p{
+    margin: auto;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    height: 50px;
+    margin-top: 7px;
+    margin-left: 10px;
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   ФОРМА ЛОГИНА АДМИНИСТРАТОРА
+   ========================================================== */
 .loginDiv{
     width: 100%;
     display: flex;
@@ -36,7 +81,6 @@ h1, h2, a, p{
     color: #ffffff96;
     font-size: 16px;
     margin: 5px;
-    
 }
 .loginBtn{
     background-image: url('login.png');
@@ -48,18 +92,142 @@ h1, h2, a, p{
     background-size: 80%;
     margin: 5px;
     background-position: center center;
-
+    transition: transform 0.3s ease;
 }
-body{
-    box-sizing: border-box;
+
+
+/* ==========================================================
+   ОСНОВНЫЕ БЛОКИ СТРАНИЦ (главная / расценки)
+   ========================================================== */
+.base {
+    background-image: url('lm.png');
+    background-repeat: no-repeat;
+    min-height: 97svh;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center center;
+    border-radius: 31px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px;
+}
+.baseR {
+    background-image: url('lm.png');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center center;
+    border-radius: 31px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px;
+}
+.baseinf{
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    border: rgba(98, 98, 98, 0.409) 1px solid;
+    display: flex;
+    height: auto;
+    width: 100%;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    margin: 20px 0px 20px 0;
+}
+.baseinf1{
+    max-width: 85%;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    display: flex;
+}
+.firm{
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+    height: auto;
+    font-size: clamp(2rem, 8vw, 5rem);
+}
+.slog{
+    margin-top: 0px;
+    padding-top: 0px;
+    text-align: center;
+}
+.adres{
+    margin: 4vh;
+}
+.base h1, p{
+    color: white;
+    text-align: center;
+    max-width: 50vw;
+    margin-bottom: 5vh;
+}
+.base h1{
+    font-size: 45pt;
+}
+.base  p{
+    font-size: 16pt;
+}
+
+
+/* ==========================================================
+   КНОПКИ (общие: расценки/позвонить/добавить/вход)
+   ========================================================== */
+.but{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.but_tel, .but_info{
+    border: 2px solid white;
+    padding: 10px 10px;
+    border-radius: 25px;
+    background-color: rgba(255, 255, 255, 30%);
+    margin: 5px;
+    font-size: 12pt;
+    transition: transform 0.3s ease;
 }
 .but_info{
     display: flex;
     font-family: comfortaa;
+    background-color: rgba(255, 255, 255, 100%);
+    padding: 10px 16px;
 }
-.top{
-    align-items: center;
+.but_info a{
+    color: #000;
 }
+.addBtn{
+    border: 2px solid white;
+    padding: 10px 10px;
+    border-radius: 25px;
+    background-color: rgba(255, 255, 255, 30%);
+    margin-top: 30px;
+    font-size: 12pt;
+    transition: transform 0.3s ease;
+    width: 250px;
+    color: #ffffffa1;
+}
+
+/* Наведение/нажатие — общее для всех кнопок сразу */
+.but_tel:hover, .but_info:hover, .addBtn:hover, .loginBtn:hover{
+    transform: scale(0.95);
+}
+.but_info:active, .but_tel:active, .addBtn:hover, .loginBtn:hover{
+    transform: scale(0.90);
+}
+/* ⚠ обрати внимание: в строке выше для .addBtn и .loginBtn стоит :hover,
+   а не :active (скорее всего опечатка) — из-за этого правило выше
+   конфликтует именно для этих двух кнопок, и в итоге всегда сработает
+   scale(0.90), а scale(0.95) для них фактически не увидишь. Если это
+   не специально — скажи, поправлю на :active. */
+
+
+/* ==========================================================
+   CRM-ФОРМА (добавление и список клиентов)
+   ========================================================== */
 .crm input{
     background-color: rgba(0, 0, 0, 0.4);
     border-radius: 25px;
@@ -69,29 +237,12 @@ body{
     font-size: 16px;
     margin-top: 30px;
 }
+input:hover{
+    background-color: rgba(255, 255, 255, 0.25);
+}
 .adddiv{
     justify-content: center;
     display: flex;
-}
-.info{
-    height: 30px;
-    margin-top: 0px;
-    padding-top: 0px;
-}
-.info p{
-    margin: 0;
-    padding: 0;
-}
-.addBtn{
-    border: 2px solid white;
-    padding: 10px 10px;
-    border-radius: 25px;
-    background-color: rgba(255, 255, 255, 30%);
-    margin-top: 30px;
-    font-size: 12pt;
-    transition: transform 0.1s ease;
-    width: 250px;
-    color: #ffffffa1;
 }
 .sidiv{
     display: flex;
@@ -113,144 +264,43 @@ body{
     text-align: center;
     align-items: center;
 }
-.top{
-    min-height: 30px;
+
+
+/* ==========================================================
+   ТАБЛИЦА РАСЦЕНОК
+   ========================================================== */
+table{
+    border: rgba(255, 255, 255, 0.225) 1px solid;
+    margin: 20px;
+    border-radius: 25px;
+    background-color: rgba(0, 0, 0, 0.398);
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
+}
+tr p{
+    max-width: 250px;
+}
+.price-cell{
+    cursor: pointer;
+    transition: background-color 0.9s ease;
+}
+.price-cell:hover{
     border-radius: 25px;
     border: rgba(98, 98, 98, 0.409) 1px solid;
-    display: flex;
-    margin-top: 0;
-    padding: 0;
+    background-color: rgba(255, 255, 255, 0.15);
 }
-.tel2 p{
-    margin: auto;
-    text-align: center;
-    justify-content: center;
-    display: flex;
-    height: 50px;
-    margin-top: 7px;
-    margin-left: 10px;
-    white-space: nowrap;
-}
-.baseinf{
-    background-color: rgba(0, 0, 0, 0.4);
+.price-cell:active{
     border-radius: 25px;
     border: rgba(98, 98, 98, 0.409) 1px solid;
-    display: flex;
-    height: auto;
-    width: 100%;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
-    margin: 20px 0px 20px 0;
-    
+    background-color: rgba(255, 255, 255, 0.25);
 }
-.baseinf1{
-max-width: 85%;
-align-items: center;
-    flex-direction: column;
-    justify-content: center;
-    display: flex;
-}
-.firm{
-    margin-bottom: 0px;
-    padding-bottom: 0px;
-    height: auto;
-    font-size: clamp(2rem, 8vw, 5rem);
-}
-.slog{
-    margin-top: 0px;
-    padding-top: 0px;
-    text-align: center;
-
+.disabled{
+    cursor: default;
 }
 
-.base {
-    background-image: url('lm.png');
-    
-    background-repeat: no-repeat;
-    min-height: 97svh;
-    background-attachment: fixed;
-    background-size: cover;
-    background-position: center center;
-    border-radius: 31px;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
-    padding: 10px;
-}
-.baseR {
-    background-image: url('lm.png');
-    
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-    background-position: center center;
-    border-radius: 31px;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
-    padding: 10px;
-}
-.but{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-@media (max-width: 768px){
-    .but{
-        flex-direction: column;
-    }
-    .top{
-        flex-wrap: wrap;
 
-    }
-    .loginDiv{
-        justify-content: center;
-    }
-}
-.base h1, p{
-    color: white;
-    text-align: center;
-    max-width: 50vw;
-    margin-bottom: 5vh;
-
-}
-.base h1{
-    font-size: 45pt;
-}
-.base  p{
-    font-size: 16pt;
-}
-.but_tel, .but_info{
-    border: 2px solid white;
-    padding: 10px 10px;
-    border-radius: 25px;
-    background-color: rgba(255, 255, 255, 30%);
-    margin: 5px;
-    font-size: 12pt;
-    transition: transform 0.1s ease;
-}
-.but_tel:hover, .but_info:hover{
-    transform: scale(0.95);
-}
-.but_info:active, .but_tel:active{
-    transform: scale(0.90);
-}
-.but_info{
-    background-color: rgba(255, 255, 255, 100%);
-    padding: 10px 16px;
-
-}
-.but_info a{
-    color: #000;
-}
-.adres{
-    margin: 4vh;
-}
+/* ==========================================================
+   ГАЛЕРЕЯ ИЗОБРАЖЕНИЙ (главная страница)
+   ========================================================== */
 .imagediv{
     border: rgba(255, 255, 255, 0.225) 1px solid;
     border-radius: 25px;
@@ -273,16 +323,19 @@ align-items: center;
     flex-shrink: 0;
     border-radius: 20px;
 }
-tr p{
-    max-width: 250px;
-}
-table{
-    border: rgba(255, 255, 255, 0.225) 1px solid;
-    margin: 20px;
-    border-radius: 25px;
-    background-color: rgba(0, 0, 0, 0.398);
-    width: 100%;
-}
-.clientsList{
-    display: flex;
+
+
+/* ==========================================================
+   АДАПТИВ (мобильные экраны)
+   ========================================================== */
+@media (max-width: 768px){
+    .but{
+        flex-direction: column;
+    }
+    .top{
+        flex-wrap: wrap;
+    }
+    .loginDiv{
+        justify-content: center;
+    }
 }
