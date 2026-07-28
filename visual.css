@@ -285,23 +285,6 @@ table{
 tr p{
     max-width: 250px;
 }
-td{
-    padding: 50px;
-}
-.price-cell{
-    cursor: pointer;
-    transition: background-color 0.9s ease;
-}
-.price-cell:hover{
-    border-radius: 25px;
-    border: rgba(98, 98, 98, 0.409) 25px solid;
-    background-color: rgba(255, 255, 255, 0.15);
-}
-.price-cell:active{
-    border-radius: 25px;
-    border: rgba(98, 98, 98, 0.409) 1px solid;
-    background-color: rgba(255, 255, 255, 0.25);
-}
 .disabled{
     cursor: default;
 }
@@ -360,9 +343,18 @@ td:focus{
         flex-direction: column;
     }
     .top{
-        flex-wrap: wrap;
+        flex-direction: column;
     }
     .loginDiv{
         justify-content: center;
+    }
+    .si{
+        width: auto;
+    }
+    .addBtn{
+        width: auto;
+    }
+    .addTableIn{
+        flex-direction: column;
     }
 }
