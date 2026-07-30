@@ -12,6 +12,7 @@
 </head>
 <body>
     <div class="base">
+        
         <div class="top">
             <div class="lmlogo"></div>
             <div class="info"><a class="tel2" href="tel:+79850569450"><p>+7 (985) 056-94-50</p></a></div>
@@ -19,17 +20,16 @@
             <button id="loginBtn" class="loginBtn"></button></div>
         </div>
         <div class="baseinf">
-            <div class="baseinf1">
         <h2 class="firm">LaunchMoto</h2>
         <h2 class="slog">ремонт, за который не стыдно</h2>
         
         <div class="but">
-            <div class="but_info" onclick="window.location.href='Rastsenky.html'">расценки</div>
-            <div class="but_tel"><a href="tel:+79850569450">позвонить</a></div>
+            <div class="but_info" style="margin-top: 50px;" onclick="window.location.href='Rastsenky.html'">расценки</div>
+            <div class="but_tel" style="margin-top: 50px;"><a href="tel:+79850569450">позвонить</a></div>
             
     </div>
     <h2 class="adres">Адрес: Мамонтовка Набережная 39</h2>
-    </div>
+    
     </div>
 
     <div class="crm" id="leadFormPublic">
@@ -39,8 +39,9 @@
             <input type="text" id="leadName" placeholder="Имя">
             <input type="text" id="leadPhone" placeholder="Телефон">
             <input type="text" id="leadTech" placeholder="Техника (модель мото)">
-            <input type="text" id="leadWork" placeholder="Требуемые работы">
             </div>
+            <input type="text" class="inp"  id="leadWork" placeholder="Опишите поломку">
+            
             <div class="adddiv"><button id="leadSendBtn" class="addBtn">Отправить заявку</button></div>
         </div>
     </div>
