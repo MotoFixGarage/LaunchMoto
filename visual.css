@@ -61,6 +61,24 @@ body{
     margin-left: 10px;
     white-space: nowrap;
 }
+.tt{
+    background-image: url("img/tt.webp");
+    background-size: cover;
+    background-position: center center;
+    height: 50px;
+    width: 50px;
+    display: flex;
+    margin: 1px;
+}
+.tg{
+    background-image: url("img/tg.png");
+    background-size: cover;
+    background-position: center center;
+    height: 50px;
+    width: 50px;
+    display: flex;
+    margin: 1px;
+}
 
 
 /* ==========================================================
@@ -204,9 +222,9 @@ body{
     margin-top: 30px;
     font-size: 12pt;
     transition: transform 0.3s ease;
-    width: 100%;
+    width: 250px;
     color: #ffffffa1;
-    margin: 20px 5px 5px 5px;
+    margin: 20px;
 
 }
 
@@ -259,7 +277,7 @@ input:hover{
     
 }
 .crm{
-    width: auto;
+    width: 100%;
 }
 .clientsList div{
     width: 100%;
@@ -322,11 +340,12 @@ td:focus{
     background-color: rgba(0, 0, 0, 0.398);
     width: 100%;
     overflow: hidden;
+    margin-top: 20px;
 }
 .image{
     display: flex;
     height: 30vh;
-    margin: 5px;
+    margin: 10px;
     gap: 20px;
     overflow-x: auto;
     scroll-behavior: smooth;
@@ -346,6 +365,9 @@ td:focus{
 @media (max-width: 1000px){
     .image{
         height: 300px;
+    }
+    .slogDiv{
+        flex-direction: column;
     }
 }
    @media (max-width: 768px){
@@ -370,6 +392,7 @@ td:focus{
     .image{
         height: 200px;
     }
+
 }
 
 @media (min-width: 2200px){
