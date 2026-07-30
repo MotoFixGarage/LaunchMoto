@@ -35,7 +35,7 @@ body{
     padding: 0;
 }
 .lmlogo{
-    background-image: url("lmlogo.png");
+    background-image: url("img/lmlogo.png");
     background-size: cover;
     background-position: center center;
     height: 50px;
@@ -83,7 +83,7 @@ body{
     margin: 5px;
 }
 .loginBtn{
-    background-image: url('login.png');
+    background-image: url('img/login.png');
     background-color: rgba(0, 0, 0, 0.4);
     border-radius: 25px;
     border: rgba(98, 98, 98, 0.409) 1px solid;
@@ -100,9 +100,8 @@ body{
    ОСНОВНЫЕ БЛОКИ СТРАНИЦ (главная / расценки)
    ========================================================== */
 .base {
-    background-image: url('lm.png');
+    background-image: url('img/lm.png');
     background-repeat: no-repeat;
-    min-height: 97svh;
     background-attachment: fixed;
     background-size: cover;
     background-position: center center;
@@ -114,7 +113,7 @@ body{
     padding: 10px;
 }
 .baseR {
-    background-image: url('lm.png');
+    background-image: url('img/lm.png');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
@@ -137,6 +136,7 @@ body{
     flex-direction: column;
     justify-content: center;
     margin: 20px 0px 20px 0;
+    box-sizing: border-box;
 }
 .baseinf1{
     max-width: 85%;
@@ -168,9 +168,6 @@ body{
 .base h1{
     font-size: 45pt;
 }
-.base  p{
-    font-size: 16pt;
-}
 
 
 /* ==========================================================
@@ -182,7 +179,7 @@ body{
     justify-content: center;
 }
 .but_tel, .but_info{
-    border: 2px solid white;
+    border: rgba(255, 255, 255, 0.495) 1px solid;
     padding: 10px 10px;
     border-radius: 25px;
     background-color: rgba(255, 255, 255, 30%);
@@ -200,16 +197,17 @@ body{
     color: #000;
 }
 .addBtn{
-    border: 2px solid white;
+    border: rgba(255, 255, 255, 0.495) 1px solid;
     padding: 10px 10px;
     border-radius: 25px;
     background-color: rgba(255, 255, 255, 30%);
     margin-top: 30px;
     font-size: 12pt;
     transition: transform 0.3s ease;
-    width: 250px;
+    width: 100%;
     color: #ffffffa1;
-    margin-bottom: 15px;
+    margin: 20px 5px 5px 5px;
+
 }
 
 /* Наведение/нажатие — общее для всех кнопок сразу */
@@ -227,9 +225,9 @@ body{
 
 
 /* ==========================================================
-   CRM-ФОРМА (добавление и список клиентов)
+   CRM-ФОРМА (добавление и список клиентов, заявки)
    ========================================================== */
-.crm input, .addTableIn input{
+.crm input, .addTableIn input, .si{
     background-color: rgba(0, 0, 0, 0.4);
     border-radius: 25px;
     border: rgba(98, 98, 98, 0.409) 1px solid;
@@ -245,6 +243,7 @@ input:hover{
 .adddiv{
     justify-content: center;
     display: flex;
+    width: 100%;
 }
 .sidiv{
     display: flex;
@@ -256,6 +255,11 @@ input:hover{
 }
 .clientsList{
     display: flex;
+    flex-wrap: wrap;
+    
+}
+.crm{
+    width: auto;
 }
 .clientsList div{
     width: 100%;
@@ -265,6 +269,7 @@ input:hover{
     margin: 30px;
     text-align: center;
     align-items: center;
+    padding: 10px;
 }
 .addTableIn{
     display: flex;
@@ -338,7 +343,12 @@ td:focus{
 /* ==========================================================
    АДАПТИВ (мобильные экраны)
    ========================================================== */
-@media (max-width: 768px){
+@media (max-width: 1000px){
+    .image{
+        height: 300px;
+    }
+}
+   @media (max-width: 768px){
     .but{
         flex-direction: column;
     }
@@ -356,5 +366,14 @@ td:focus{
     }
     .addTableIn{
         flex-direction: column;
+    }
+    .image{
+        height: 200px;
+    }
+}
+
+@media (min-width: 2200px){
+    .image{
+        justify-content: center;
     }
 }

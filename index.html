@@ -5,15 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LaunchMoto</title>
     <link rel="stylesheet" href="visual.css">
-    <link rel="apple-touch-icon" href="applelogo.png">
-    <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="shortcut icon" href="favicon.ico">
+    <script src='script.js' defer></script>
+    <link rel="apple-touch-icon" href="img/applelogo.png">
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <link rel="shortcut icon" href="img/favicon.ico">
 </head>
 <body>
     <div class="base">
         <div class="top">
             <div class="lmlogo"></div>
             <div class="info"><a class="tel2" href="tel:+79850569450"><p>+7 (985) 056-94-50</p></a></div>
+            <div class="loginDiv"><input type="password" class="adminPass" id="adminPass" placeholder="Пароль администратора">
+            <button id="loginBtn" class="loginBtn"></button></div>
         </div>
         <div class="baseinf">
             <div class="baseinf1">
@@ -29,7 +32,19 @@
     <h2 class="adres">Адрес: Мамонтовка Набережная 39</h2>
     </div>
     </div>
-    <div class="imagediv"><div class="image"><img src="i2.jpeg" alt=""><img src="i1.jpeg" alt=""><img src="i3.jpeg" alt=""><img src="i2.jpeg" alt=""><img src="i1.jpeg" alt=""><img src="i3.jpeg" alt=""><img src="i2.jpeg" alt=""><img src="i1.jpeg" alt=""><img src="i3.jpeg" alt=""><img src="i2.jpeg" alt=""><img src="i1.jpeg" alt=""><img src="i3.jpeg" alt=""><img src="i2.jpeg" alt=""><img src="i1.jpeg" alt=""><img src="i3.jpeg" alt=""></div></div>
+
+    <div class="crm" id="leadFormPublic">
+        <div class="baseinf">
+            <h2 class="slog" style="margin: 20px;">оставить заявку</h2>
+            <input type="text" id="leadName" placeholder="Имя">
+            <input type="text" id="leadPhone" placeholder="Телефон">
+            <input type="text" id="leadTech" placeholder="Техника (модель мото)">
+            <input type="text" id="leadWork" placeholder="Требуемые работы">
+            <div class="adddiv"><button id="leadSendBtn" class="addBtn">Отправить заявку</button></div>
+        </div>
+    </div>
+
+    <div class="imagediv"><div class="image"><img src="img/i2.jpeg" alt=""><img src="img/i1.jpeg" alt=""><img src="img/i3.jpeg" alt=""><img src="img/i4.png" alt=""></div></div>
     
 </div>
 </body>

@@ -34,7 +34,25 @@
     <div id="adminLogin" class="admin-login">
   
 </div>
-    
+
+    <div class="crm" id="leadFormPublic">
+        <div class="baseinf">
+            <h2 class="slog" style="margin: 20px">оставить заявку</h2>
+            <input type="text" id="leadName" placeholder="Имя">
+            <input type="text" id="leadPhone" placeholder="Телефон">
+            <input type="text" id="leadTech" placeholder="Техника (модель мото)">
+            <input type="text" id="leadWork" placeholder="Требуемые работы">
+            <div class="adddiv"><button id="leadSendBtn" class="addBtn">Отправить заявку</button></div>
+        </div>
+    </div>
+
+    <div class="crm" id="leadsPanel" style="display:none;">
+        <div class="baseinf" >
+            <h2 class="slog" style="margin: 20px;">новые заявки</h2>
+            <div id="leadsList" class="clientsList"></div>
+        </div>
+    </div>
+
     <div class="crm" id="crmPanel" style="display:none;">
   <div class="baseinf">
 
@@ -61,8 +79,10 @@
   <input type="text" id="priceEnduro" placeholder="Цена эндуро">
   </div>
   <button id="addPriceBtn" class="addBtn">Добавить услугу</button>
-  <button id="tableBut" class="addBtn">редактировать</button>
+  <button id="editModeBtn" class="addBtn">Редактировать таблицу</button>
 </div>
+
+<div class="sidiv"><input type="text" id="priceSearchInput" class="si" placeholder="Поиск услуги"></div>
 
     <table class="price" id="infoll">
     <tr>
