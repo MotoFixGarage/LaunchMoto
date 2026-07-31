@@ -1,4 +1,4 @@
-const API_URL = 'https://script.google.com/macros/s/AKfycbxWpaQWyo0SUCYe_gnxU5aiFEDhCUNm9gbCmW26B3lbjxVtCuNJZl0Fwgv8OY-dda83/exec'; // твой URL из деплоя
+const API_URL = 'https://script.google.com/macros/s/AKfycbyvU8kEj-A4EFnRpkqCUKwUrhcH4-1Sv1tmxccDx8fnsCzaLrxBUuLQMdCM4xZAUph6/exec'; // твой URL из деплоя
 
 const searchInput = document.getElementById('searchInput');
 const clientsList = document.getElementById('clientsList');
