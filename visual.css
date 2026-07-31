@@ -4,7 +4,13 @@
 @font-face {
     font-family: comfortaa;
     src: url(Comfortaa-VariableFont_wght.ttf);
+    
 }
+@font-face {
+    font-family: plusJakartaSans;
+    src: url(PlusJakartaSans.ttf);
+}
+
 html{
     scroll-behavior: smooth;
 }
@@ -120,7 +126,7 @@ body{
    ОСНОВНЫЕ БЛОКИ СТРАНИЦ (главная / расценки)
    ========================================================== */
 .base {
-    background-image: url('img/lm.png');
+    background-image: url('img/fon.png');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
@@ -133,7 +139,7 @@ body{
     padding: 10px;
 }
 .baseR {
-    background-image: url('img/lm.png');
+    background-image: url('img/fon.png');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
@@ -172,6 +178,7 @@ body{
     padding-bottom: 0px;
     height: auto;
     font-size: clamp(2rem, 8vw, 5rem);
+    font-family: plusJakartaSans;
 }
 .slog{
     margin-top: 0px;
@@ -370,6 +377,7 @@ td:focus{
     border-radius: 0.7vw;
     flex-shrink: 0;
     border-radius: 20px;
+    filter: brightness(0.75) contrast(1.1) saturate(0.8);
 }
 
 .inp{
