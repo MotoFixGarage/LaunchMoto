@@ -9,15 +9,10 @@ const crmPanel = document.getElementById('crmPanel');
 const loginBtn = document.getElementById('loginBtn');
 const adminPass = document.getElementById('adminPass');
 
-// Ключ храним в sessionStorage — живёт, пока открыта вкладка,
-// при закрытии браузера/вкладки слетает и придётся войти заново
 let ADMIN_KEY = sessionStorage.getItem('adminKey') || '';
-
-// Контроллер последнего запроса на поиск — нужен, чтобы отменять
-// устаревшие запросы и не дать им перезаписать уже очищенный список
 let searchController = null;
 
-// --- Элементы блока расценок (могут отсутствовать не на всех страницах) ---
+// --- Расценки ---
 const priceTable = document.getElementById('infoll');
 const addPriceRow = document.getElementById('addPriceRow');
 const priceName = document.getElementById('priceName');
@@ -27,7 +22,7 @@ const addPriceBtn = document.getElementById('addPriceBtn');
 const editModeBtn = document.getElementById('editModeBtn');
 const priceSearchInput = document.getElementById('priceSearchInput');
 
-// --- Элементы заявок от клиентов (публичная форма + админ-панель) ---
+// --- Заявки ---
 const leadFormPublic = document.getElementById('leadFormPublic');
 const leadName = document.getElementById('leadName');
 const leadPhone = document.getElementById('leadPhone');
@@ -37,22 +32,17 @@ const leadSendBtn = document.getElementById('leadSendBtn');
 const leadsPanel = document.getElementById('leadsPanel');
 const leadsList = document.getElementById('leadsList');
 
-let pricesCache = []; // тут храним последний загруженный список расценок
-
-// editMode отделён от факта логина: залогинен ≠ таблица сразу редактируется.
-// Пока editMode = false, даже у админа таблица кликабельна как у обычного посетителя
-// (заполняет карточку клиента), и превращается в поля ввода только после явного клика на кнопку.
+let pricesCache = [];
 let editMode = false;
 
-// showCrm/showLogin теперь безопасны на любой странице — каждое обращение
-// к элементу проверяется на существование, т.к. index.html не содержит
-// админ-элементов вовсе (там их просто нет в разметке).
 function showCrm() {
   if (adminLogin) adminLogin.style.display = 'none';
   if (crmPanel) crmPanel.style.display = 'block';
-  if (addPriceRow) addPriceRow.style.display = 'flex'; // форма добавления услуги видна только админу
-  if (leadFormPublic) leadFormPublic.style.display = 'none'; // форма заявки скрыта от админа
-  if (leadsPanel) leadsPanel.style.display = 'block'; // панель заявок видна только админу
+  if (addPriceRow) addPriceRow.style.display = 'flex';
+  if (priceTable) priceTable.style.display = 'table'; // ⚠ именно 'table', не 'block' — иначе строки ломаются
+  if (priceSearchInput) priceSearchInput.style.display = 'block';
+  if (leadFormPublic) leadFormPublic.style.display = 'none';
+  if (leadsPanel) leadsPanel.style.display = 'block';
   renderPrices();
   loadLeads();
 }
@@ -61,14 +51,15 @@ function showLogin() {
   if (adminLogin) adminLogin.style.display = 'block';
   if (crmPanel) crmPanel.style.display = 'none';
   if (addPriceRow) addPriceRow.style.display = 'none';
-  if (leadFormPublic) leadFormPublic.style.display = 'block'; // форма заявки видна всем, кроме админа
+  if (priceTable) priceTable.style.display = 'none';
+  if (priceSearchInput) priceSearchInput.style.display = 'none';
+  if (leadFormPublic) leadFormPublic.style.display = 'block';
   if (leadsPanel) leadsPanel.style.display = 'none';
-  editMode = false; // при выходе сбрасываем режим редактирования на всякий случай
+  editMode = false;
   if (editModeBtn) editModeBtn.textContent = 'Редактировать таблицу';
   renderPrices();
 }
 
-// Кнопка переключения режима редактирования таблицы расценок
 if (editModeBtn) {
   editModeBtn.addEventListener('click', () => {
     editMode = !editMode;
@@ -77,8 +68,6 @@ if (editModeBtn) {
   });
 }
 
-// Пробуем ключ на бэкенде: если он верный — бэкенд вернёт список (пустой или нет),
-// если неверный — вернёт {error: 'unauthorized'}
 async function tryLogin(key) {
   const res = await fetch(`${API_URL}?key=${encodeURIComponent(key)}&search=`);
   const data = await res.json();
@@ -93,7 +82,7 @@ async function tryLogin(key) {
   ADMIN_KEY = key;
   sessionStorage.setItem('adminKey', key);
   showCrm();
-  if (clientsList) clientsList.innerHTML = ''; // список пуст, пока не начали искать
+  if (clientsList) clientsList.innerHTML = '';
   return true;
 }
 
@@ -104,10 +93,9 @@ if (loginBtn) {
   });
 }
 
-// Отрисовать список клиентов на странице
 function renderClients(clients) {
   if (!clientsList) return;
-  clientsList.innerHTML = ''; // очищаем перед перерисовкой
+  clientsList.innerHTML = '';
   clients.forEach(c => {
     const card = document.createElement('div');
     card.className = 'client-card';
@@ -123,13 +111,8 @@ function renderClients(clients) {
   });
 }
 
-// Запрос списка (с фильтром и ключом администратора)
 async function loadClients(query = '') {
-  // если предыдущий запрос ещё летит — отменяем его,
-  // чтобы его устаревший ответ не перезаписал актуальный список
-  if (searchController) {
-    searchController.abort();
-  }
+  if (searchController) searchController.abort();
   searchController = new AbortController();
 
   try {
@@ -140,7 +123,6 @@ async function loadClients(query = '') {
     const data = await res.json();
 
     if (data && data.error) {
-      // ключ протух/невалиден — выкидываем на логин
       sessionStorage.removeItem('adminKey');
       showLogin();
       return;
@@ -148,24 +130,16 @@ async function loadClients(query = '') {
 
     renderClients(data);
   } catch (err) {
-    if (err.name === 'AbortError') {
-      // это ожидаемо — запрос отменили, потому что стартовал более новый
-      return;
-    }
+    if (err.name === 'AbortError') return;
     console.error('Ошибка загрузки клиентов:', err);
   }
 }
 
-// Поиск срабатывает при каждом вводе символа
 if (searchInput) {
   searchInput.addEventListener('input', () => {
     const query = searchInput.value.trim();
     if (query === '') {
-      // отменяем всё, что ещё летит в фоне — иначе его ответ
-      // придёт позже и снова покажет старую карточку
-      if (searchController) {
-        searchController.abort();
-      }
+      if (searchController) searchController.abort();
       if (clientsList) clientsList.innerHTML = '';
       return;
     }
@@ -173,7 +147,6 @@ if (searchInput) {
   });
 }
 
-// Добавление нового клиента
 if (addBtn) {
   addBtn.addEventListener('click', async () => {
     const client = {
@@ -193,16 +166,14 @@ if (addBtn) {
       body: JSON.stringify(client)
     });
 
-    // очищаем поля после отправки
     ['name','phone','model','date','work','sum','comment'].forEach(id => {
       document.getElementById(id).value = '';
     });
 
-    loadClients(searchInput.value.trim()); // обновляем список с учётом текущего поиска
+    loadClients(searchInput.value.trim());
   });
 }
 
-// Если ключ уже сохранён с прошлого раза (в этой же вкладке) — сразу пробуем войти
 if (ADMIN_KEY) {
   tryLogin(ADMIN_KEY);
 } else {
@@ -211,20 +182,17 @@ if (ADMIN_KEY) {
 
 
 // ==========================================================
-// РАСЦЕНКИ — загрузка, отображение, добавление и редактирование
+// РАСЦЕНКИ
 // ==========================================================
 
-// Загружает список расценок с бэкенда — доступно всем, без ключа
 async function loadPrices() {
-  if (!priceTable) return; // на этой странице таблицы расценок нет
-
+  if (!priceTable) return;
   const res = await fetch(`${API_URL}?type=prices`);
   const data = await res.json();
   pricesCache = data;
   renderPrices();
 }
 
-// Сохраняет одну услугу — либо новую (price_add), либо правку существующей (price_edit)
 async function savePrice({ id, name, pit, enduro }) {
   await fetch(API_URL, {
     method: 'POST',
@@ -232,42 +200,29 @@ async function savePrice({ id, name, pit, enduro }) {
     body: JSON.stringify({
       type: id ? 'price_edit' : 'price_add',
       key: ADMIN_KEY,
-      id,
-      name,
-      pit,
-      enduro
+      id, name, pit, enduro
     })
   });
 }
 
-// Рисует строки таблицы расценок на основе pricesCache.
-// Поля ввода (редактирование) показываются только если залогинен И включён editMode.
-// Во всех остальных случаях (гость, либо админ вне режима редактирования) —
-// обычный текст с кликабельными ценами, заполняющими форму CRM.
 function renderPrices(list) {
   if (!priceTable) return;
 
   const items = list || pricesCache;
   const isEditing = ADMIN_KEY && editMode;
 
-  // убираем все строки, кроме самой первой (заголовок наименование/пит-скут/эндуро)
   const rows = priceTable.querySelectorAll('tr');
-  rows.forEach((row, i) => {
-    if (i > 0) row.remove();
-  });
+  rows.forEach((row, i) => { if (i > 0) row.remove(); });
 
   items.forEach(item => {
     const tr = document.createElement('tr');
 
     if (isEditing) {
-      // режим редактирования: три поля ввода вместо текста
       tr.innerHTML = `
         <td><input type="text" class="edit-name" value="${item['Название']}"></td>
         <td><input type="text" class="edit-pit" value="${item['ЦенаПитСкут']}"></td>
         <td><input type="text" class="edit-enduro" value="${item['ЦенаЭндуро']}"></td>
       `;
-
-      // сохраняем изменение сразу, как только человек ушёл из поля (событие change)
       const saveThisRow = () => {
         savePrice({
           id: item['ID'],
@@ -276,11 +231,8 @@ function renderPrices(list) {
           enduro: tr.querySelector('.edit-enduro').value
         });
       };
-      tr.querySelectorAll('input').forEach(inp => {
-        inp.addEventListener('change', saveThisRow);
-      });
+      tr.querySelectorAll('input').forEach(inp => inp.addEventListener('change', saveThisRow));
     } else {
-      // обычный режим просмотра: текст + возможность клика по цене
       tr.innerHTML = `
         <td><p>${item['Название']}</p></td>
         <td class="price-cell" data-price="${item['ЦенаПитСкут']}" data-type="пит/ скут"><p>${item['ЦенаПитСкут']}</p></td>
@@ -292,22 +244,18 @@ function renderPrices(list) {
   });
 
   if (!isEditing) {
-    attachPriceCellClicks(); // клики работают у гостя И у залогиненного вне режима редактирования
+    attachPriceCellClicks();
   }
 }
 
-// Клик по цене (не в режиме редактирования) добавляет работу и сумму в форму CRM
 function attachPriceCellClicks() {
   document.querySelectorAll('.price-cell').forEach(cell => {
     const priceText = cell.dataset.price || '';
-
-    // берём первое число в тексте цены (учитывает "2 000 ₽", "от 2000 ₽",
-    // "1500 - 3000 ₽" — в последнем случае возьмётся нижняя граница)
     const match = priceText.match(/\d[\d\s]*\d|\d/);
     const priceNumber = match ? parseInt(match[0].replace(/\s/g, ''), 10) : NaN;
 
     if (!priceNumber || isNaN(priceNumber)) {
-      cell.classList.add('disabled'); // "-" или пусто — не кликабельно
+      cell.classList.add('disabled');
       return;
     }
 
@@ -315,47 +263,35 @@ function attachPriceCellClicks() {
     cell.addEventListener('click', () => {
       const workField = document.getElementById('work');
       const sumField = document.getElementById('sum');
-      if (!workField || !sumField) return; // на этой странице формы CRM может не быть
+      if (!workField || !sumField) return;
 
       const serviceNameEl = cell.closest('tr').querySelector('td p');
       const serviceName = serviceNameEl ? serviceNameEl.textContent.trim() : '';
       const bikeType = cell.dataset.type || '';
       const entry = `${serviceName} (${bikeType}) — ${priceText}`;
 
-      workField.value = workField.value
-        ? `${workField.value}, ${entry}`
-        : entry;
-
+      workField.value = workField.value ? `${workField.value}, ${entry}` : entry;
       const currentSum = parseInt(sumField.value, 10) || 0;
       sumField.value = currentSum + priceNumber;
     });
   });
 }
 
-// Добавление новой услуги (доступно только в режиме админа — кнопка скрыта иначе)
 if (addPriceBtn) {
   addPriceBtn.addEventListener('click', async () => {
-    await savePrice({
-      name: priceName.value,
-      pit: pricePit.value,
-      enduro: priceEnduro.value
-    });
-
+    await savePrice({ name: priceName.value, pit: pricePit.value, enduro: priceEnduro.value });
     priceName.value = '';
     pricePit.value = '';
     priceEnduro.value = '';
-
-    loadPrices(); // перезагружаем список, чтобы новая услуга сразу появилась
+    loadPrices();
   });
 }
 
-// Поиск услуги — заменяет содержимое таблицы найденными строками,
-// при очистке поля возвращается полный список
 if (priceSearchInput) {
   priceSearchInput.addEventListener('input', () => {
     const query = priceSearchInput.value.trim().toLowerCase();
     if (query === '') {
-      renderPrices(); // пусто — показываем всю таблицу
+      renderPrices();
       return;
     }
     const filtered = pricesCache.filter(item =>
@@ -365,14 +301,13 @@ if (priceSearchInput) {
   });
 }
 
-loadPrices(); // расценки грузим сразу при открытии страницы — они публичные
+loadPrices();
 
 
 // ==========================================================
-// ЗАЯВКИ ОТ КЛИЕНТОВ — публичная форма + просмотр админом
+// ЗАЯВКИ ОТ КЛИЕНТОВ
 // ==========================================================
 
-// Отправка новой заявки — доступно всем, ключ не нужен (форма скрыта от админа через showCrm/showLogin)
 if (leadSendBtn) {
   leadSendBtn.addEventListener('click', async () => {
     const lead = {
@@ -394,18 +329,19 @@ if (leadSendBtn) {
   });
 }
 
-// Загружает непрочитанные заявки — только для админа
 async function loadLeads() {
-  if (!leadsPanel) return; // на этой странице панели заявок нет
+  if (!leadsPanel) return;
 
+  // ВАЖНО: тут запрашиваются именно заявки (type=leads), не клиенты.
+  // Если сюда прилетают карточки клиентов — дело не в этой функции,
+  // а в том, что отвечает сам API_URL на этот конкретный запрос.
   const res = await fetch(`${API_URL}?type=leads&key=${encodeURIComponent(ADMIN_KEY)}`);
   const data = await res.json();
 
-  if (data && data.error) return; // ключ не подошёл — просто не показываем
+  if (data && data.error) return;
   renderLeads(data);
 }
 
-// Рисует карточки заявок с кнопкой "Прочитано"
 function renderLeads(leads) {
   if (!leadsList) return;
   leadsList.innerHTML = '';
@@ -413,8 +349,6 @@ function renderLeads(leads) {
   leads.forEach(lead => {
     const card = document.createElement('div');
     card.className = 'client-card';
-
-    // время приходит из таблицы как дата — форматируем в привычный вид
     const time = lead['Время'] ? new Date(lead['Время']).toLocaleString('ru-RU') : '';
 
     card.innerHTML = `
@@ -434,7 +368,7 @@ function renderLeads(leads) {
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ type: 'lead_read', key: ADMIN_KEY, id: lead['ID'] })
       });
-      card.remove(); // убираем карточку сразу, не дожидаясь перезагрузки списка
+      card.remove();
     });
 
     card.appendChild(readBtn);

@@ -287,7 +287,7 @@ input:hover{
     width: 100%;
 }
 .clientsList div{
-    width: 100%;
+    
     background-color: rgba(0, 0, 0, 0.4);
     border-radius: 25px;
     border: rgba(98, 98, 98, 0.409) 1px solid;
@@ -295,6 +295,7 @@ input:hover{
     text-align: center;
     align-items: center;
     padding: 10px;
+
 }
 .addTableIn{
     display: flex;
@@ -313,7 +314,10 @@ table{
     width: 100%;
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(20px);
-
+    
+}
+.price{
+    box-sizing: border-box;
 }
 tr p{
     max-width: 250px;
