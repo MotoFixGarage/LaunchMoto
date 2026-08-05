@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ремонт питбайков, мотоциклов и квадроциклов в Пушкино | LaunchMoto</title>
-        <meta name="description" content="Ремонт питбайков, мотоциклов, квадроциклов и мопедов в Пушкино. Диагностика, обслуживание, ремонт двигателя и электрики.">
+    <title>LaunchMoto</title>
     <link rel="stylesheet" href="visual.css">
     <script src='script.js' defer></script>
     <link rel="apple-touch-icon" href="applelogo.png">
@@ -23,7 +22,7 @@
             <div class="baseinf1">
         <h2 class="firm">LaunchMoto</h2>
         <h2 class="slog">ремонт, за который не стыдно</h2>
-        <p>LaunchMoto — мотосервис в Пушкино. Занимаемся ремонтом питбайков, эндуро, квадроциклов, мопедов и другой мототехники. Выполняем диагностику, обслуживание, ремонт двигателей, электрики и подвески.</p>
+        
         <div class="but" style="margin-top: 50px;">
             <div class="but_info" onclick="window.location.href='index.html'">главная страница</div>
             <div class="but_tel"><a href="tel:+79850569450">позвонить</a></div>
@@ -35,6 +34,31 @@
     <div id="adminLogin" class="admin-login">
   
 </div>
+<div class="addTable" id="filterAdminRow" style="display:none;">
+    <div class="addTableIn">
+  <input type="text" id="filterAdminCategory" list="filterCategoryList" placeholder="Категория (новая или существующая)">
+  <datalist id="filterCategoryList"></datalist>
+  <input type="text" id="filterAdminNode" list="filterNodeList" placeholder="Узел (новый или существующий)">
+  <datalist id="filterNodeList"></datalist>
+  </div>
+    <div class="addTableIn">
+  <input type="text" id="filterAdminName" placeholder="Название услуги">
+  <input type="text" id="filterAdminPrice" placeholder="Базовая цена">
+  <input type="text" id="filterAdminTime" placeholder="Время (напр. 30 минут)">
+  </div>
+  <button id="filterAdminAddBtn" class="addBtn">Добавить услугу в фильтр</button>
+</div>
+<div id="filterAdminServiceList" class="clientsList"></div>
+
+    <div class="baseinf" id="filterCalc">
+        <h2 class="slog" style="margin: 20px;">калькулятор примерной стоимости (бета)</h2>
+        <select id="categorySelect"><option value="">Выберите категорию</option></select>
+        <select id="nodeSelect" disabled><option value="">Сначала выберите категорию</option></select>
+        <select id="issueSelect" disabled><option value="">Сначала выберите узел</option></select>
+        <p id="filterResult"></p>
+        <p id="filterResult1"></p>
+        <p style="margin: 10px;">*Некоторых услуг, или категорий может не быть в фильтре</p>
+    </div>
 
     <div class="crm" id="leadFormPublic">
         <div class="baseinf" >
@@ -95,6 +119,9 @@
     </tr>
     <!-- строки расценок подставляются сюда через JS из Google Таблицы -->
 </table>
+
+
+
 <div class="top" style="margin-top: 20px;">
         <div class="tt"></div><a href="https://www.tiktok.com/@launch_moto">tiktok.com/@launch_moto</a>
         <div class="tg"></div><a href="https://t.me/LaunchMoto">t.me/LaunchMoto</a>
