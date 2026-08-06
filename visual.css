@@ -374,7 +374,7 @@ td:focus{
 }
 .image{
     display: flex;
-    height: 30vh;
+    height: 300px;
     margin: 10px;
     gap: 20px;
     overflow-x: auto;
@@ -398,7 +398,7 @@ td:focus{
    ========================================================== */
 @media (max-width: 1000px){
     .image{
-        height: 300px;
+        height: 250px;
     }
     .slogDiv{
         flex-direction: column;
@@ -429,6 +429,9 @@ td:focus{
     }
     .image{
         height: 200px;
+    }
+    .baseP{
+        display: none;
     }
 
 }

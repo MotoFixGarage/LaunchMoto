@@ -1,4 +1,4 @@
-const API_URL = 'https://script.google.com/macros/s/AKfycbxJJgol7l_PUEmUAVgZZ4e6uWrRj5X0yARAt3Bp8be47H9D3F9i6i166iA2dsaPR31x/exec'; // твой URL из деплоя
+const API_URL = 'https://script.google.com/macros/s/AKfycbzbQgHkcDulay49B9oSsdtJF_fAGCno3J-cd82cRip9TT8qDWTCRLGiv3eN7-oh5irN/exec'; // твой URL из деплоя
 
 const searchInput = document.getElementById('searchInput');
 const clientsList = document.getElementById('clientsList');
@@ -12,16 +12,6 @@ const adminPass = document.getElementById('adminPass');
 let ADMIN_KEY = sessionStorage.getItem('adminKey') || '';
 let searchController = null;
 
-// --- Расценки ---
-const priceTable = document.getElementById('infoll');
-const addPriceRow = document.getElementById('addPriceRow');
-const priceName = document.getElementById('priceName');
-const pricePit = document.getElementById('pricePit');
-const priceEnduro = document.getElementById('priceEnduro');
-const addPriceBtn = document.getElementById('addPriceBtn');
-const editModeBtn = document.getElementById('editModeBtn');
-const priceSearchInput = document.getElementById('priceSearchInput');
-
 // --- Заявки ---
 const leadFormPublic = document.getElementById('leadFormPublic');
 const leadName = document.getElementById('leadName');
@@ -32,7 +22,8 @@ const leadSendBtn = document.getElementById('leadSendBtn');
 const leadsPanel = document.getElementById('leadsPanel');
 const leadsList = document.getElementById('leadsList');
 
-// --- Фильтр расценок для клиента (категория → узел → услуги), хранится как JSON ---
+// --- Фильтр расценок для клиента (категория → узел → услуги), хранится как JSON.
+// Это теперь ЕДИНСТВЕННОЕ место хранения и редактирования цен. ---
 const categorySelect = document.getElementById('categorySelect');
 const nodeSelect = document.getElementById('nodeSelect');
 const issueSelect = document.getElementById('issueSelect');
@@ -52,44 +43,23 @@ const filterAdminServiceList = document.getElementById('filterAdminServiceList')
 
 let filterData = {}; // весь объект целиком: { Категория: { Узел: [ {name, price, time}, ... ] } }
 
-let pricesCache = [];
-let editMode = false;
-
 function showCrm() {
   if (adminLogin) adminLogin.style.display = 'none';
   if (crmPanel) crmPanel.style.display = 'block';
-  if (addPriceRow) addPriceRow.style.display = 'flex';
-  if (priceTable) priceTable.style.display = 'table'; // ⚠ именно 'table', не 'block' — иначе строки ломаются
-  if (priceSearchInput) priceSearchInput.style.display = 'block';
   if (leadFormPublic) leadFormPublic.style.display = 'none';
   if (leadsPanel) leadsPanel.style.display = 'block';
   if (filterAdminRow) filterAdminRow.style.display = 'flex';
   renderFilterAdminPanel();
-  renderPrices();
   loadLeads();
 }
 
 function showLogin() {
   if (adminLogin) adminLogin.style.display = 'block';
   if (crmPanel) crmPanel.style.display = 'none';
-  if (addPriceRow) addPriceRow.style.display = 'none';
-  if (priceTable) priceTable.style.display = 'none';
-  if (priceSearchInput) priceSearchInput.style.display = 'none';
   if (leadFormPublic) leadFormPublic.style.display = 'block';
   if (leadsPanel) leadsPanel.style.display = 'none';
   if (filterAdminRow) filterAdminRow.style.display = 'none';
   if (filterAdminServiceList) filterAdminServiceList.innerHTML = '';
-  editMode = false;
-  if (editModeBtn) editModeBtn.textContent = 'Редактировать таблицу';
-  renderPrices();
-}
-
-if (editModeBtn) {
-  editModeBtn.addEventListener('click', () => {
-    editMode = !editMode;
-    editModeBtn.textContent = editMode ? 'Готово' : 'Редактировать таблицу';
-    renderPrices();
-  });
 }
 
 async function tryLogin(key) {
@@ -206,129 +176,6 @@ if (ADMIN_KEY) {
 
 
 // ==========================================================
-// РАСЦЕНКИ
-// ==========================================================
-
-async function loadPrices() {
-  if (!priceTable) return;
-  const res = await fetch(`${API_URL}?type=prices`);
-  const data = await res.json();
-  pricesCache = data;
-  renderPrices();
-}
-
-async function savePrice({ id, name, pit, enduro }) {
-  await fetch(API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({
-      type: id ? 'price_edit' : 'price_add',
-      key: ADMIN_KEY,
-      id, name, pit, enduro
-    })
-  });
-}
-
-function renderPrices(list) {
-  if (!priceTable) return;
-
-  const items = list || pricesCache;
-  const isEditing = ADMIN_KEY && editMode;
-
-  const rows = priceTable.querySelectorAll('tr');
-  rows.forEach((row, i) => { if (i > 0) row.remove(); });
-
-  items.forEach(item => {
-    const tr = document.createElement('tr');
-
-    if (isEditing) {
-      tr.innerHTML = `
-        <td><input type="text" class="edit-name" value="${item['Название']}"></td>
-        <td><input type="text" class="edit-pit" value="${item['ЦенаПитСкут']}"></td>
-        <td><input type="text" class="edit-enduro" value="${item['ЦенаЭндуро']}"></td>
-      `;
-      const saveThisRow = () => {
-        savePrice({
-          id: item['ID'],
-          name: tr.querySelector('.edit-name').value,
-          pit: tr.querySelector('.edit-pit').value,
-          enduro: tr.querySelector('.edit-enduro').value
-        });
-      };
-      tr.querySelectorAll('input').forEach(inp => inp.addEventListener('change', saveThisRow));
-    } else {
-      tr.innerHTML = `
-        <td><p>${item['Название']}</p></td>
-        <td class="price-cell" data-price="${item['ЦенаПитСкут']}" data-type="пит/ скут"><p>${item['ЦенаПитСкут']}</p></td>
-        <td class="price-cell" data-price="${item['ЦенаЭндуро']}" data-type="эндуро"><p>${item['ЦенаЭндуро']}</p></td>
-      `;
-    }
-
-    priceTable.appendChild(tr);
-  });
-
-  if (!isEditing) {
-    attachPriceCellClicks();
-  }
-}
-
-function attachPriceCellClicks() {
-  document.querySelectorAll('.price-cell').forEach(cell => {
-    const priceText = cell.dataset.price || '';
-    const match = priceText.match(/\d[\d\s]*\d|\d/);
-    const priceNumber = match ? parseInt(match[0].replace(/\s/g, ''), 10) : NaN;
-
-    if (!priceNumber || isNaN(priceNumber)) {
-      cell.classList.add('disabled');
-      return;
-    }
-
-    cell.classList.add('price-cell');
-    cell.addEventListener('click', () => {
-      const workField = document.getElementById('work');
-      const sumField = document.getElementById('sum');
-      if (!workField || !sumField) return;
-
-      const serviceNameEl = cell.closest('tr').querySelector('td p');
-      const serviceName = serviceNameEl ? serviceNameEl.textContent.trim() : '';
-      const bikeType = cell.dataset.type || '';
-      const entry = `${serviceName} (${bikeType}) — ${priceText}`;
-
-      workField.value = workField.value ? `${workField.value}, ${entry}` : entry;
-      const currentSum = parseInt(sumField.value, 10) || 0;
-      sumField.value = currentSum + priceNumber;
-    });
-  });
-}
-
-if (addPriceBtn) {
-  addPriceBtn.addEventListener('click', async () => {
-    await savePrice({ name: priceName.value, pit: pricePit.value, enduro: priceEnduro.value });
-    priceName.value = '';
-    pricePit.value = '';
-    priceEnduro.value = '';
-    loadPrices();
-  });
-}
-
-if (priceSearchInput) {
-  priceSearchInput.addEventListener('input', () => {
-    const query = priceSearchInput.value.trim().toLowerCase();
-    if (query === '') {
-      renderPrices();
-      return;
-    }
-    const filtered = pricesCache.filter(item =>
-      String(item['Название']).toLowerCase().includes(query)
-    );
-    renderPrices(filtered);
-  });
-}
-
-loadPrices();
-
-
-// ==========================================================
 // ЗАЯВКИ ОТ КЛИЕНТОВ
 // ==========================================================
 
@@ -356,9 +203,6 @@ if (leadSendBtn) {
 async function loadLeads() {
   if (!leadsPanel) return;
 
-  // ВАЖНО: тут запрашиваются именно заявки (type=leads), не клиенты.
-  // Если сюда прилетают карточки клиентов — дело не в этой функции,
-  // а в том, что отвечает сам API_URL на этот конкретный запрос.
   const res = await fetch(`${API_URL}?type=leads&key=${encodeURIComponent(ADMIN_KEY)}`);
   const data = await res.json();
 
@@ -402,8 +246,8 @@ function renderLeads(leads) {
 
 
 // ==========================================================
-// ФИЛЬТР РАСЦЕНОК ДЛЯ КЛИЕНТА (категория → узел → услуга)
-// Вся иерархия хранится и передаётся одним JSON-объектом.
+// ФИЛЬТР РАСЦЕНОК — единственный источник цен на сайте
+// (категория → узел → услуга), хранится и передаётся одним JSON-объектом.
 // ==========================================================
 
 // Загружает весь объект фильтра — публично, без ключа
@@ -441,6 +285,7 @@ function resetNodeAndIssue() {
   issueSelect.innerHTML = '<option value="">Сначала выберите узел</option>';
   issueSelect.disabled = true;
   if (filterResult) filterResult.textContent = '';
+  if (filterResult1) filterResult1.textContent = '';
 }
 
 if (categorySelect) {
@@ -458,6 +303,7 @@ if (categorySelect) {
     issueSelect.innerHTML = '<option value="">Сначала выберите узел</option>';
     issueSelect.disabled = true;
     if (filterResult) filterResult.textContent = '';
+    if (filterResult1) filterResult1.textContent = '';
   });
 }
 
@@ -472,6 +318,7 @@ if (nodeSelect) {
       services.map((s, i) => `<option value="${i}">${s.name}</option>`).join('');
     issueSelect.disabled = false;
     if (filterResult) filterResult.textContent = '';
+    if (filterResult1) filterResult1.textContent = '';
   });
 }
 
@@ -482,6 +329,7 @@ if (issueSelect) {
     const idx = issueSelect.value;
     if (idx === '' || !filterData[cat] || !filterData[cat][node]) {
       if (filterResult) filterResult.textContent = '';
+      if (filterResult1) filterResult1.textContent = '';
       return;
     }
 
@@ -490,14 +338,13 @@ if (issueSelect) {
 
     const base = parseFloat(String(service.price).replace(/[^\d.]/g, '')) || 0;
     const low = Math.round(base);
-    const high = Math.round(base * 1.2);
     const timeText = service.time ? ` · Примерное время: ${service.time}` : '';
     filterResult.textContent = `Примерная стоимость: ${low}₽ +- 30% `;
-    filterResult1.textContent = `${timeText}`;
+    if (filterResult1) filterResult1.textContent = `${timeText}`;
   });
 }
 
-// --- Панель управления для админа ---
+// --- Панель управления для админа (единственное место редактирования цен) ---
 
 function updateFilterDatalists() {
   if (!filterCategoryList) return;
