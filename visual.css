@@ -433,6 +433,9 @@ td:focus{
     .baseP{
         display: none;
     }
+    .base{
+        background-position: left;
+    }
 
 }
 
