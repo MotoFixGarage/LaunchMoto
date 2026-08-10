@@ -320,7 +320,10 @@ input:hover{
 }
 
 /* ==========================================================
-   ТАБЛИЦА РАСЦЕНОК
+   ТАБЛИЦА РАСЦЕНОК (динамическая, только для админа)
+   Столбцы = категории техники (столько, сколько есть в filterData).
+   Строки идут последовательными блоками по узлам: сначала заголовок
+   узла на всю ширину, затем строки услуг этого узла.
    ========================================================== */
 table{
     border: rgba(255, 255, 255, 0.225) 1px solid;
@@ -350,7 +353,7 @@ tr p{
     text-align: center;
     width: 100%;
     box-sizing: border-box;
-    padding: 0;
+    padding-bottom: 50px;
     margin: 0;
 }
 td:hover,
@@ -358,6 +361,27 @@ td:focus{
     background-color: rgba(255, 255, 255, 0.1);
     outline: none;
     border-radius: 25px;
+}
+
+/* Обёртка с горизонтальной прокруткой — колонок-категорий может стать много */
+.tableWrap{
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* Заголовок узла (мотор, электрика и т.д.) — отдельная строка на всю ширину таблицы */
+.node-header th{
+    text-align: left;
+    background-color: rgba(255, 255, 255, 0.08);
+}
+.node-header p{
+    max-width: none;
+    font-weight: bold;
+    padding: 6px 10px;
+    margin: 0;
+}
+.price th p{
+    white-space: nowrap;
 }
 
 
@@ -432,9 +456,6 @@ td:focus{
     }
     .baseP{
         display: none;
-    }
-    .base{
-        background-position: left;
     }
 
 }

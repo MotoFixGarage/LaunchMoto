@@ -41,6 +41,10 @@ const filterAdminTime = document.getElementById('filterAdminTime');
 const filterAdminAddBtn = document.getElementById('filterAdminAddBtn');
 const filterAdminServiceList = document.getElementById('filterAdminServiceList');
 
+// --- Таблица расценок для админа (динамические колонки = категории) ---
+const filterTableWrap = document.getElementById('filterTableWrap');
+const filterPriceTable = document.getElementById('filterPriceTable');
+
 let filterData = {}; // весь объект целиком: { Категория: { Узел: [ {name, price, time}, ... ] } }
 
 function showCrm() {
@@ -49,6 +53,7 @@ function showCrm() {
   if (leadFormPublic) leadFormPublic.style.display = 'none';
   if (leadsPanel) leadsPanel.style.display = 'block';
   if (filterAdminRow) filterAdminRow.style.display = 'flex';
+  if (filterTableWrap) filterTableWrap.style.display = 'block';
   renderFilterAdminPanel();
   loadLeads();
 }
@@ -60,6 +65,8 @@ function showLogin() {
   if (leadsPanel) leadsPanel.style.display = 'none';
   if (filterAdminRow) filterAdminRow.style.display = 'none';
   if (filterAdminServiceList) filterAdminServiceList.innerHTML = '';
+  if (filterTableWrap) filterTableWrap.style.display = 'none';
+  if (filterPriceTable) filterPriceTable.innerHTML = '';
 }
 
 async function tryLogin(key) {
@@ -258,7 +265,7 @@ async function loadFilterData() {
   filterData = await res.json();
 
   populateCategories();
-  renderFilterAdminPanel(); // если админ залогинен — сразу обновит и панель управления
+  renderFilterAdminPanel(); // если админ залогинен — сразу обновит и панель управления, и таблицу
 }
 
 // Отправляет ВЕСЬ объект фильтра на сервер (полная перезапись)
@@ -344,7 +351,7 @@ if (issueSelect) {
   });
 }
 
-// --- Панель управления для админа (единственное место редактирования цен) ---
+// --- Панель управления для админа (единственное место добавления/удаления услуг) ---
 
 function updateFilterDatalists() {
   if (!filterCategoryList) return;
@@ -382,6 +389,7 @@ function renderFilterServiceList() {
       service.price = row.querySelector('.fs-price').value;
       service.time = row.querySelector('.fs-time').value;
       saveFilterData();
+      renderFilterPriceTable();
     };
     row.querySelectorAll('input').forEach(inp => inp.addEventListener('change', saveRow));
 
@@ -396,6 +404,7 @@ function renderFilterServiceList() {
       renderFilterServiceList();
       updateFilterDatalists();
       updateNodeDatalist();
+      renderFilterPriceTable();
     });
 
     row.appendChild(delBtn);
@@ -437,6 +446,7 @@ if (filterAdminAddBtn) {
     renderFilterServiceList();
     updateFilterDatalists();
     updateNodeDatalist();
+    renderFilterPriceTable();
   });
 }
 
@@ -444,6 +454,159 @@ function renderFilterAdminPanel() {
   updateFilterDatalists();
   updateNodeDatalist();
   renderFilterServiceList();
+  renderFilterPriceTable();
+}
+
+
+// ==========================================================
+// ТАБЛИЦА РАСЦЕНОК ДЛЯ АДМИНА
+// Строки — последовательно по узлам (мотор, электрика и т.д.), внутри узла — услуги.
+// Столбцы — категории техники, полностью динамические: сколько категорий в
+// filterData, столько и колонок. Узел и цена редактируются прямо в таблице.
+// Видна и редактируется только админом.
+// ==========================================================
+
+// Собирает порядок узлов и список уникальных названий услуг внутри каждого узла,
+// сохраняя порядок первого появления (а не сортируя по алфавиту).
+function buildNodeServiceMap() {
+  const nodeOrder = [];
+  const nodeServices = {}; // node -> [serviceName, ...] в порядке появления
+
+  Object.keys(filterData).forEach(cat => {
+    Object.keys(filterData[cat]).forEach(node => {
+      if (!nodeServices[node]) {
+        nodeServices[node] = [];
+        nodeOrder.push(node);
+      }
+      filterData[cat][node].forEach(service => {
+        if (!nodeServices[node].includes(service.name)) {
+          nodeServices[node].push(service.name);
+        }
+      });
+    });
+  });
+
+  return { nodeOrder, nodeServices };
+}
+
+function findService(cat, node, name) {
+  if (!filterData[cat] || !filterData[cat][node]) return null;
+  return filterData[cat][node].find(s => s.name === name) || null;
+}
+
+function renderFilterPriceTable() {
+  if (!filterPriceTable) return;
+
+  const categories = Object.keys(filterData);
+  if (categories.length === 0) {
+    filterPriceTable.innerHTML = '';
+    return;
+  }
+
+  const { nodeOrder, nodeServices } = buildNodeServiceMap();
+
+  let html = '<tr><th><p>услуга</p></th>' +
+    categories.map(c => `<th><p>${c}</p></th>`).join('') +
+    '</tr>';
+
+  nodeOrder.forEach(node => {
+    html += `<tr class="node-header"><th colspan="${categories.length + 1}">` +
+      `<input type="text" class="node-header-cell" data-old-node="${node}" value="${node}">` +
+      '</th></tr>';
+
+    nodeServices[node].forEach(name => {
+      html += '<tr>';
+      html += `<td><input type="text" class="name-cell" data-node="${node}" data-old-name="${name}" value="${name}"></td>`;
+      categories.forEach(cat => {
+        const service = findService(cat, node, name);
+        const value = service ? service.price : '';
+        html += `<td><input type="text" class="price-cell" data-cat="${cat}" data-node="${node}" data-name="${name}" value="${value}" placeholder="—"></td>`;
+      });
+      html += '</tr>';
+    });
+  });
+
+  filterPriceTable.innerHTML = html;
+
+  filterPriceTable.querySelectorAll('.price-cell').forEach(inp => {
+    inp.addEventListener('change', () => {
+      const cat = inp.dataset.cat;
+      const node = inp.dataset.node;
+      const name = inp.dataset.name;
+      const value = inp.value.trim();
+      let service = findService(cat, node, name);
+
+      if (!service) {
+        if (!value) return; // пустое поле для несуществующей услуги — ничего не делаем
+        if (!filterData[cat]) filterData[cat] = {};
+        if (!filterData[cat][node]) filterData[cat][node] = [];
+        filterData[cat][node].push({ name, price: value, time: '' });
+        saveFilterData();
+        return;
+      }
+
+      if (!value) {
+        // очистили цену у существующей услуги — убираем её из этой категории
+        filterData[cat][node] = filterData[cat][node].filter(s => s !== service);
+        if (filterData[cat][node].length === 0) delete filterData[cat][node];
+        if (Object.keys(filterData[cat]).length === 0) delete filterData[cat];
+        saveFilterData();
+        renderFilterPriceTable();
+        return;
+      }
+
+      service.price = value;
+      saveFilterData();
+    });
+  });
+
+  // Переименование узла целиком — сразу во всех категориях, где он встречается
+  filterPriceTable.querySelectorAll('.node-header-cell').forEach(inp => {
+    inp.addEventListener('change', () => {
+      const oldNode = inp.dataset.oldNode;
+      const newNode = inp.value.trim();
+
+      if (!newNode || newNode === oldNode) {
+        inp.value = oldNode;
+        return;
+      }
+
+      categories.forEach(cat => {
+        if (!filterData[cat] || !filterData[cat][oldNode]) return;
+        if (!filterData[cat][newNode]) filterData[cat][newNode] = [];
+        filterData[cat][newNode] = filterData[cat][newNode].concat(filterData[cat][oldNode]);
+        delete filterData[cat][oldNode];
+      });
+
+      saveFilterData();
+      renderFilterPriceTable();
+      updateFilterDatalists();
+      updateNodeDatalist();
+    });
+  });
+
+  // Переименование услуги — сразу во всех категориях этого узла
+  filterPriceTable.querySelectorAll('.name-cell').forEach(inp => {
+    inp.addEventListener('change', () => {
+      const node = inp.dataset.node;
+      const oldName = inp.dataset.oldName;
+      const newName = inp.value.trim();
+
+      if (!newName || newName === oldName) {
+        inp.value = oldName;
+        return;
+      }
+
+      categories.forEach(cat => {
+        const service = findService(cat, node, oldName);
+        if (!service) return;
+        service.name = newName;
+      });
+
+      saveFilterData();
+      renderFilterPriceTable();
+    });
+  });
 }
 
 loadFilterData(); // грузим сразу при открытии страницы — калькулятор публичный

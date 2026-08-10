@@ -11,7 +11,7 @@
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
-    <div class="base">
+    <div class="baseR">
         <div class="top">
             <div class="lmlogo"></div>
             <div class="info"><a class="tel2" href="tel:+79850569450"><p>+7 (985) 056-94-50</p></a></div>
@@ -50,6 +50,8 @@
   <button id="filterAdminAddBtn" class="addBtn">Добавить услугу в фильтр</button>
 </div>
 <div id="filterAdminServiceList" class="clientsList"></div>
+
+
 
     <div class="baseinf" id="filterCalc">
         <h2 class="slog" style="margin: 20px;">калькулятор примерной стоимости (бета)</h2>
@@ -100,7 +102,11 @@
   <div id="clientsList" class="clientsList"></div>
   </div>
 </div>
-
+<div class="tableWrap" id="filterTableWrap" style="display:none;">
+    <table class="price" id="filterPriceTable">
+    <!-- строки и колонки таблицы полностью строятся из filterData через JS -->
+    </table>
+</div>
 <div class="top" style="margin-top: 20px;">
         <div class="tt"></div><a href="https://www.tiktok.com/@launch_moto">tiktok.com/@launch_moto</a>
         <div class="tg"></div><a href="https://t.me/LaunchMoto">t.me/LaunchMoto</a>
