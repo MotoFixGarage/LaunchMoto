@@ -327,7 +327,6 @@ input:hover{
    ========================================================== */
 table{
     border: rgba(255, 255, 255, 0.225) 1px solid;
-    margin: 20px;
     border-radius: 25px;
     background-color: rgba(0, 0, 0, 0.398);
     width: 100%;
