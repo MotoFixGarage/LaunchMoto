@@ -97,9 +97,12 @@ body{
     color: #ffffffa1;
     margin: 20px;
     text-align: center;
+    display: flex;
+    align-items: center;
 }
 .yandexmap p{
     margin: 0;
+    text-align: center;
 }
 
 /* ==========================================================
@@ -466,6 +469,10 @@ td:focus{
     }
     .baseP{
         display: none;
+    }
+    .yandexmap{
+        width: 300px;
+        flex-direction: column;
     }
 
 }
