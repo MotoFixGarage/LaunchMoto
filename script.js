@@ -13,6 +13,21 @@ let ADMIN_KEY = sessionStorage.getItem('adminKey') || '';
 let searchController = null;
 
 // ==========================================================
+// ЭКРАН ЗАГРУЗКИ
+// Скрываем оверлей только после полной загрузки страницы (window.load) —
+// то есть когда браузер уже получил HTML, CSS, шрифты и все картинки.
+// Если на странице нет #pageLoader, просто ничего не делаем.
+// ==========================================================
+const pageLoader = document.getElementById('pageLoader');
+if (pageLoader) {
+  
+  window.addEventListener('load', () => {
+    pageLoader.classList.add('pageLoader-hidden');
+    setTimeout(() => pageLoader.remove(), 500); // убираем из DOM после анимации затухания
+  });
+}
+
+// ==========================================================
 // ИНДИКАТОР ЗАГРУЗКИ НА КНОПКАХ
 // Пока идёт запрос к Apps Script, содержимое кнопки временно заменяется
 // на гифку img/loading.gif, кнопка блокируется от повторного нажатия.

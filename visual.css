@@ -1,4 +1,38 @@
 /* ==========================================================
+   ЭКРАН ЗАГРУЗКИ
+   Перекрывает страницу, пока браузер не догрузит все ресурсы
+   (картинки, шрифты) — чтобы сайт не "собирался" на глазах у
+   пользователя кусками, а появлялся уже полностью готовым.
+   ========================================================== */
+#pageLoader{
+    position: fixed;
+    inset: 0;
+    background-color: #0b0b0b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.4s ease;
+}
+#pageLoader.pageLoader-hidden{
+    opacity: 0;
+    pointer-events: none;
+}
+.pageLoaderLogo{
+    background-image: url("img/lmlogo.png");
+    background-size: cover;
+    background-position: center center;
+    height: 80px;
+    width: 80px;
+    animation: pageLoaderPulse 1.2s ease-in-out infinite;
+}
+@keyframes pageLoaderPulse{
+    0%, 100%{ transform: scale(1); opacity: 0.6; }
+    50%{ transform: scale(1.15); opacity: 1; }
+}
+
+
+/* ==========================================================
    ШРИФТЫ И БАЗОВЫЕ СТИЛИ
    ========================================================== */
 @font-face {
@@ -475,6 +509,7 @@ td:focus{
     }
     .addBtn{
         width: auto;
+        min-width: 40px;
     }
     .addTableIn{
         flex-direction: column;
