@@ -21,7 +21,7 @@
     pointer-events: none;
 }
 .pageLoaderLogo{
-    background-image: url("img/lmlogo.png");
+    background-image: url("img/лого.png");
     background-size: cover;
     background-position: center center;
     height: 80px;

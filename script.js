@@ -21,7 +21,7 @@ let searchController = null;
 // ==========================================================
 const pageLoader = document.getElementById('pageLoader');
 if (pageLoader) {
-  const MIN_LOADER_TIME = 2200; // мс — минимальное время показа экрана загрузки
+  const MIN_LOADER_TIME = 3000; // мс — минимальное время показа экрана загрузки
   const loaderStart = Date.now();
 
   const hidePageLoader = () => {
