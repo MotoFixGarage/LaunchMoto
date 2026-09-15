@@ -14,16 +14,25 @@ let searchController = null;
 
 // ==========================================================
 // ЭКРАН ЗАГРУЗКИ
-// Скрываем оверлей только после полной загрузки страницы (window.load) —
-// то есть когда браузер уже получил HTML, CSS, шрифты и все картинки.
+// Скрываем оверлей после window.load (все картинки/шрифты реально
+// получены), но не раньше MIN_LOADER_TIME — иначе на быстром интернете
+// лого мелькает и пропадает, не успев толком показаться.
 // Если на странице нет #pageLoader, просто ничего не делаем.
 // ==========================================================
 const pageLoader = document.getElementById('pageLoader');
 if (pageLoader) {
-  
-  window.addEventListener('load', () => {
+  const MIN_LOADER_TIME = 2200; // мс — минимальное время показа экрана загрузки
+  const loaderStart = Date.now();
+
+  const hidePageLoader = () => {
     pageLoader.classList.add('pageLoader-hidden');
     setTimeout(() => pageLoader.remove(), 500); // убираем из DOM после анимации затухания
+  };
+
+  window.addEventListener('load', () => {
+    const elapsed = Date.now() - loaderStart;
+    const remaining = Math.max(MIN_LOADER_TIME - elapsed, 0);
+    setTimeout(hidePageLoader, remaining);
   });
 }
 
