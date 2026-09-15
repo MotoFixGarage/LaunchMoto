@@ -103,10 +103,13 @@ body{
     align-items: center;
     margin-top: 0;
     padding: 0;
+
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
     
 }
 .lmlogo{
-    background-image: url("img/lmlogo.png");
+    background-image: url("img/лого.png");
     background-size: cover;
     background-position: center center;
     height: 50px;
@@ -210,7 +213,7 @@ body{
    ОСНОВНЫЕ БЛОКИ СТРАНИЦ (главная / расценки)
    ========================================================== */
 .base {
-    background-image: url('img/fon.png');
+    background-image: url('img/fona.JPG');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
@@ -223,7 +226,7 @@ body{
     padding: 10px;
 }
 .baseR {
-    background-image: url('img/fon.png');
+    background-image: url('img/fon3.PNG');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
@@ -247,6 +250,8 @@ body{
     justify-content: center;
     margin: 20px 0px 20px 0;
     box-sizing: border-box;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
 }
 .baseinf1{
     max-width: 85%;
@@ -478,6 +483,9 @@ td:focus{
     width: 100%;
     overflow: hidden;
     margin-top: 20px;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    
 }
 .image{
     display: flex;
