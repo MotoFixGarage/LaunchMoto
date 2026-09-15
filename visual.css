@@ -29,9 +29,12 @@ body{
 /* ==========================================================
    ВЕРХНЯЯ ПАНЕЛЬ (лого, телефон, форма входа)
    ========================================================== */
-.top{
+
+   .top{
     min-height: 30px;
     width: 100%;
+    margin-left: 5px;
+    margin-right: 5px;
     background-color: rgba(0, 0, 0, 0.4);
     border-radius: 25px;
     border: rgba(98, 98, 98, 0.409) 1px solid;
@@ -39,6 +42,7 @@ body{
     align-items: center;
     margin-top: 0;
     padding: 0;
+    
 }
 .lmlogo{
     background-image: url("img/lmlogo.png");
@@ -264,7 +268,9 @@ body{
     margin: 20px;
 
 }
-
+button img{
+    width: 15px;
+}
 /* Наведение/нажатие — общее для всех кнопок сразу */
 .but_tel:hover, .but_info:hover, .addBtn:hover, .loginBtn:hover{
     transform: scale(0.95);

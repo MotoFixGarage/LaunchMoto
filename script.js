@@ -1,4 +1,4 @@
-const API_URL = 'https://script.google.com/macros/s/AKfycbzbQgHkcDulay49B9oSsdtJF_fAGCno3J-cd82cRip9TT8qDWTCRLGiv3eN7-oh5irN/exec'; // твой URL из деплоя
+const API_URL = 'https://script.google.com/macros/s/AKfycbyCiFlvicIuRwg0iBf6NAV3Z9IEhZ_DBqv_7nFPdh_46SC2jObXoCK-qsOD-fOHYJIl/exec'; // твой URL из деплоя
 
 const searchInput = document.getElementById('searchInput');
 const clientsList = document.getElementById('clientsList');
@@ -11,6 +11,30 @@ const adminPass = document.getElementById('adminPass');
 
 let ADMIN_KEY = sessionStorage.getItem('adminKey') || '';
 let searchController = null;
+
+// ==========================================================
+// ИНДИКАТОР ЗАГРУЗКИ НА КНОПКАХ
+// Пока идёт запрос к Apps Script, содержимое кнопки временно заменяется
+// на гифку img/loading.gif, кнопка блокируется от повторного нажатия.
+// После ответа сервера исходное содержимое кнопки возвращается.
+// ==========================================================
+function setButtonLoading(btn) {
+  if (!btn || btn.dataset.loading === 'true') return;
+  btn.dataset.loading = 'true';
+  btn.dataset.originalContent = btn.innerHTML;
+  btn.classList.add('btn-loading');
+  btn.disabled = true;
+  btn.innerHTML = '<img src="img/loading.gif" alt="загрузка" class="btnLoadingGif">';
+}
+
+function clearButtonLoading(btn) {
+  if (!btn || btn.dataset.loading !== 'true') return;
+  btn.innerHTML = btn.dataset.originalContent || '';
+  btn.classList.remove('btn-loading');
+  btn.disabled = false;
+  delete btn.dataset.loading;
+  delete btn.dataset.originalContent;
+}
 
 // --- Заявки ---
 const leadFormPublic = document.getElementById('leadFormPublic');
@@ -87,26 +111,90 @@ async function tryLogin(key) {
   return true;
 }
 
+// ==========================================================
+// ФОРМАТИРОВАНИЕ ТЕЛЕФОНА
+// Приводит номер к виду 8 (999) 123-45-67 перед отправкой на сервер.
+// Ключевая идея — не пытаться "дописать" скобки/тире в уже введённую строку
+// (там и рождаются баги вроде двойных скобок), а всегда сначала вычистить
+// все нецифровые символы и пересобрать формат с нуля. Тогда неважно, ввёл
+// ли человек номер с +7, с пробелами, слитно или уже в этом же формате —
+// результат всегда один и тот же, без дублей.
+// ==========================================================
+function formatPhone(raw) {
+  let digits = String(raw || '').replace(/\D/g, '');
+  if (!digits) return '';
+
+  // отбрасываем код страны (7 или 8 в начале 11-значного номера),
+  // оставляя 10 цифр самого номера
+  if (digits.length === 11) {
+    digits = digits.slice(1);
+  } else if (digits.length > 11) {
+    digits = digits.slice(-10);
+  }
+  digits = digits.slice(0, 10);
+
+  let result = '8 (' + digits.slice(0, 3);
+  if (digits.length >= 3) result += ')';
+  if (digits.length > 3) result += ' ' + digits.slice(3, 6);
+  if (digits.length > 6) result += '-' + digits.slice(6, 8);
+  if (digits.length > 8) result += '-' + digits.slice(8, 10);
+  return result;
+}
+
 if (loginBtn) {
-  loginBtn.addEventListener('click', () => {
-    tryLogin(adminPass.value);
+  loginBtn.addEventListener('click', async () => {
+    setButtonLoading(loginBtn);
+    await tryLogin(adminPass.value);
     adminPass.value = '';
+    clearButtonLoading(loginBtn);
   });
+}
+
+// Объединяет записи клиентов с одинаковым номером телефона в одну карточку
+// и считает общую сумму по всем визитам — пригодится для скидок постоянным клиентам.
+function groupClientsByPhone(clients) {
+  const map = new Map();
+
+  clients.forEach(c => {
+    const phone = String(c['Телефон'] || '').trim();
+    if (!map.has(phone)) {
+      map.set(phone, { phone, name: c['Имя'], visits: [] });
+    }
+    const entry = map.get(phone);
+    if (c['Имя']) entry.name = c['Имя']; // берём самое свежее имя из визитов
+    entry.visits.push(c);
+  });
+
+  return Array.from(map.values());
+}
+
+function sumVisits(visits) {
+  return visits.reduce((total, v) => {
+    const n = parseFloat(String(v['Сумма']).replace(/[^\d.-]/g, '')) || 0;
+    return total + n;
+  }, 0);
 }
 
 function renderClients(clients) {
   if (!clientsList) return;
   clientsList.innerHTML = '';
-  clients.forEach(c => {
+
+  const groups = groupClientsByPhone(clients);
+
+  groups.forEach(group => {
+    const total = sumVisits(group.visits);
+
+    const visitsHtml = group.visits.map(v => `
+      <p>${v['Модель'] || ''} — ${v['Работы'] || ''} — ${v['Сумма'] || 0} ₽${v['Комментарий'] ? ' (' + v['Комментарий'] + ')' : ''}</p>
+    `).join('');
+
     const card = document.createElement('div');
     card.className = 'client-card';
     card.innerHTML = `
-      <p><b>${c['Имя']}</b> </p>
-      <a href="tel:${c['Телефон']}"><p>${c['Телефон']}</p><a/>
-      <p>${c['Модель']}</p>
-      <p>${c['Работы']}</p>
-      <p>${c['Сумма']} ₽</p>
-      <p>${c['Комментарий'] || ''}</p>
+      <p><b>${group.name}</b></p>
+      <a href="tel:${group.phone}"><p>${group.phone}</p></a>
+      ${visitsHtml}
+      <p><b>Всего потрачено: ${total} ₽</b></p>
     `;
     clientsList.appendChild(card);
   });
@@ -150,10 +238,15 @@ if (searchInput) {
 
 if (addBtn) {
   addBtn.addEventListener('click', async () => {
+    setButtonLoading(addBtn);
+
+    const phoneInput = document.getElementById('phone');
+    phoneInput.value = formatPhone(phoneInput.value);
+
     const client = {
       key: ADMIN_KEY,
       name: document.getElementById('name').value,
-      phone: document.getElementById('phone').value,
+      phone: phoneInput.value,
       model: document.getElementById('model').value,
       date: document.getElementById('date').value,
       work: document.getElementById('work').value,
@@ -171,7 +264,8 @@ if (addBtn) {
       document.getElementById(id).value = '';
     });
 
-    loadClients(searchInput.value.trim());
+    await loadClients(searchInput.value.trim());
+    clearButtonLoading(addBtn);
   });
 }
 
@@ -188,6 +282,10 @@ if (ADMIN_KEY) {
 
 if (leadSendBtn) {
   leadSendBtn.addEventListener('click', async () => {
+    setButtonLoading(leadSendBtn);
+
+    leadPhone.value = formatPhone(leadPhone.value);
+
     const lead = {
       type: 'lead_add',
       name: leadName.value,
@@ -203,6 +301,7 @@ if (leadSendBtn) {
     });
 
     [leadName, leadPhone, leadTech, leadWork].forEach(inp => { inp.value = ''; });
+    clearButtonLoading(leadSendBtn);
     alert('Заявка отправлена! Мы свяжемся с вами в ближайшее время.');
   });
 }
@@ -238,6 +337,7 @@ function renderLeads(leads) {
     readBtn.className = 'addBtn';
     readBtn.textContent = 'Прочитано';
     readBtn.addEventListener('click', async () => {
+      setButtonLoading(readBtn);
       await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -396,11 +496,12 @@ function renderFilterServiceList() {
     const delBtn = document.createElement('button');
     delBtn.className = 'addBtn';
     delBtn.textContent = 'Удалить';
-    delBtn.addEventListener('click', () => {
+    delBtn.addEventListener('click', async () => {
+      setButtonLoading(delBtn);
       filterData[cat][node].splice(idx, 1);
       if (filterData[cat][node].length === 0) delete filterData[cat][node];
       if (Object.keys(filterData[cat]).length === 0) delete filterData[cat];
-      saveFilterData();
+      await saveFilterData();
       renderFilterServiceList();
       updateFilterDatalists();
       updateNodeDatalist();
@@ -423,11 +524,13 @@ if (filterAdminNode) {
 }
 
 if (filterAdminAddBtn) {
-  filterAdminAddBtn.addEventListener('click', () => {
+  filterAdminAddBtn.addEventListener('click', async () => {
     const cat = filterAdminCategory.value.trim();
     const node = filterAdminNode.value.trim();
     const name = filterAdminName.value.trim();
     if (!cat || !node || !name) return; // категория/узел/название обязательны
+
+    setButtonLoading(filterAdminAddBtn);
 
     if (!filterData[cat]) filterData[cat] = {};
     if (!filterData[cat][node]) filterData[cat][node] = [];
@@ -442,11 +545,13 @@ if (filterAdminAddBtn) {
     filterAdminPrice.value = '';
     filterAdminTime.value = '';
 
-    saveFilterData();
+    await saveFilterData();
     renderFilterServiceList();
     updateFilterDatalists();
     updateNodeDatalist();
     renderFilterPriceTable();
+
+    clearButtonLoading(filterAdminAddBtn);
   });
 }
 
