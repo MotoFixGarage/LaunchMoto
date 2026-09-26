@@ -103,7 +103,7 @@ body{
     align-items: center;
     margin-top: 0;
     padding: 0;
-    z-index: 1;
+    
 }
 .lmlogo{
     background-image: url("img/лого.png");
@@ -224,31 +224,8 @@ body{
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
 }
-*{
-    box-sizing: border-box;
-}
-html {
-    
-}
-
-body {
-    background-color: #0b0b0b;
-    position: fixed;
-    
-    inset: 0;
-
-    z-index: 0;
-
-    background-image: url("img/fon6.jpg");
-
-    background-size: cover;
-
-    background-position: center;
-    padding: 0px;
-}
 .baseR {
-    inset: 1;
-   z-index: 1;
+    background-image: url(img/fon6.jpg);
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
@@ -259,7 +236,6 @@ body {
     flex-direction: column;
     justify-content: center;
     padding: 10px;
-    box-sizing: border-box;
 }
 .baseinf, .addTable{
     background-color: rgba(0, 0, 0, 0.4);
@@ -314,9 +290,7 @@ body {
 .price p{
     padding-bottom: 50px;
 }
-.background{
-    
-}
+
 
 /* ==========================================================
    КНОПКИ (общие: расценки/позвонить/добавить/вход)
@@ -326,24 +300,6 @@ body {
     align-items: center;
     justify-content: center;
 }
-.menu{
-     
-    background-color: rgba(0, 0, 0, 0.4);
-    border-radius: 25px;
-    border: rgba(98, 98, 98, 0.409) 1px solid;
-    height: 40px;
-    background-size: 80%;
-    margin: 5px;
-    transition: transform 0.3s ease;
-    display: flex;
-    align-items: center;
-    padding-right: 5px;
-}
-.menuimg{background-image: url('img/menu1.png');
-height: 40px; width: 40px;
-    background-position: center center;
-background-size: cover;
-background-size: 80%;}
 .but_tel, .but_info{
     border: rgba(255, 255, 255, 0.495) 1px solid;
     padding: 10px 10px;
@@ -416,7 +372,6 @@ input:hover{
 .sidiv{
     display: flex;
     justify-content: center;
-    width: 198px;
 }
 .si{
     width: 350px;
@@ -428,8 +383,7 @@ input:hover{
 .clientsList{
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
+    
 }
 .crm{
     width: 100%;
@@ -444,13 +398,6 @@ input:hover{
     align-items: center;
     padding: 10px;
 
-}
-.client-card{
-    width: 300px;
-    min-height: 200px;
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
 }
 .addTableIn{
     display: flex;
