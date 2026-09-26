@@ -228,11 +228,21 @@ body{
     box-sizing: border-box;
 }
 html {
-    background-color: #0b0b0b;
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 0;
+
+    background-image: url("img/fon6.jpg");
+
+    background-size: cover;
+
+    background-position: center;
 }
 
 body {
-    background-color: #0b0b0b;
+    
 }
 .baseR {
     inset: 1;
@@ -303,17 +313,7 @@ body {
     padding-bottom: 50px;
 }
 .background{
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 0;
-
-    background-image: url("img/fon6.jpg");
-
-    background-size: cover;
-
-    background-position: center;
+    
 }
 
 /* ==========================================================
