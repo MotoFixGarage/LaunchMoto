@@ -228,13 +228,10 @@ body{
     box-sizing: border-box;
 }
 html {
-    scroll-behavior: smooth;
     background-color: #0b0b0b;
 }
 
 body {
-    margin: 0;
-    box-sizing: border-box;
     background-color: #0b0b0b;
 }
 .baseR {
