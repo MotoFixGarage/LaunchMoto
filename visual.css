@@ -103,7 +103,7 @@ body{
     align-items: center;
     margin-top: 0;
     padding: 0;
-    
+    z-index: 1;
 }
 .lmlogo{
     background-image: url("img/лого.png");
@@ -224,8 +224,12 @@ body{
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
 }
+*{
+    box-sizing: border-box;
+}
 .baseR {
-   
+    inset: 1;
+   z-index: 1;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
@@ -236,6 +240,7 @@ body{
     flex-direction: column;
     justify-content: center;
     padding: 10px;
+    box-sizing: border-box;
 }
 .baseinf, .addTable{
     background-color: rgba(0, 0, 0, 0.4);
