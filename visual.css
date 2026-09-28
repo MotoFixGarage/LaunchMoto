@@ -74,6 +74,12 @@
 
 html{
     scroll-behavior: smooth;
+    padding: 0px;
+    background-image: url('img/fon6.JPG');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center center;
 }
 h1, h2, a, p{
     color: white;
@@ -84,6 +90,14 @@ h1, h2, a, p{
 }
 body{
     box-sizing: border-box;
+    padding: 0px;
+    margin: 0px;
+    background-image: url('img/fon6.JPG');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center center;
+    background-color:#000;
 }
 
 
@@ -225,7 +239,6 @@ body{
     -webkit-backdrop-filter: blur(15px);
 }
 .baseR {
-    background-image: url(img/fon6.jpg);
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
@@ -236,6 +249,28 @@ body{
     flex-direction: column;
     justify-content: center;
     padding: 10px;
+}
+.interface{
+    border-radius: 31px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px;
+    width: 100%;
+    z-index:1;
+}
+.background{
+    width: 110%;
+    height: 100vh;
+    position: fixed;
+    inset:0;
+    z-index:0;
+    background-image: url('img/fon6.JPG');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center center;
 }
 .baseinf, .addTable{
     background-color: rgba(0, 0, 0, 0.4);
@@ -286,12 +321,18 @@ body{
     border-radius: 25px;
     background-color: rgba(0, 0, 0, 0.4);
     color: #ffffffa1;
+    opacity:0;
 }
 .price p{
     padding-bottom: 50px;
 }
 
-
+.select{
+    border:rgba(98, 98, 98, 0.409) 1px solid;
+    border-radius:20px;
+    height:30px
+    background-color: rgba(0, 0, 0, 0.4);
+}
 /* ==========================================================
    КНОПКИ (общие: расценки/позвонить/добавить/вход)
    ========================================================== */
