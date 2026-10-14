@@ -17,6 +17,8 @@
     </div>
 
     <div class="baseR">
+        <div class="background"></div>
+        <div class="interface">
         <div class="top">
             <div class="lmlogo"></div>
             <div class="info"><a class="tel2" href="tel:+79850569450"><p>+7 (985) 056-94-50</p></a></div>
@@ -61,9 +63,9 @@
 
     <div class="baseinf" id="filterCalc">
         <h2 class="slog" style="margin: 20px;">фильтр примерной стоимости (бета)</h2>
-        <div class='select' ><p style='margin:5px; position:absolute; '>Выберите категорию</p><select id="categorySelect"  style="height: 20px; "><option value="">Выберите категорию</option></select></div>
-    <div class='select'><p style='margin:5px;'>Сначала выберите категорию</p><select id="nodeSelect" disabled style="height: 15px;"><option value="">Сначала выберите категорию</option></select></div>
-    <div class='select'><p style='margin:5px;'>Сначала выберите узел</p><select id="issueSelect" disabled style="height: 15px;"><option value="">Сначала выберите узел</option></select></div>
+        <div class="select"><p id="categoryLabel">Выберите категорию</p><select id="categorySelect"><option value="">Выберите категорию</option></select></div>
+        <div class="select select-disabled"><p id="nodeLabel">Сначала выберите категорию</p><select id="nodeSelect" disabled><option value="">Сначала выберите категорию</option></select></div>
+        <div class="select select-disabled"><p id="issueLabel">Сначала выберите узел</p><select id="issueSelect" disabled><option value="">Сначала выберите узел</option></select></div>
         <p id="filterResult"></p>
         <p id="filterResult1"></p>
         <p style="margin: 10px;">*Некоторых услуг, или категорий может не быть в фильтре</p>
@@ -117,6 +119,7 @@
         <div class="tt"></div><a href="https://www.tiktok.com/@launch_moto">tiktok.com/@launch_moto</a>
         <div class="tg"></div><a href="https://t.me/LaunchMoto">t.me/LaunchMoto</a>
     </div>
+</div>
 </div>
 </body>
 </html>

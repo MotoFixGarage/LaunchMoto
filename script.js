@@ -77,6 +77,9 @@ const nodeSelect = document.getElementById('nodeSelect');
 const issueSelect = document.getElementById('issueSelect');
 const filterResult = document.getElementById('filterResult');
 const filterResult1 = document.getElementById('filterResult1');
+const categoryLabel = document.getElementById('categoryLabel');
+const nodeLabel = document.getElementById('nodeLabel');
+const issueLabel = document.getElementById('issueLabel');
 
 const filterAdminRow = document.getElementById('filterAdminRow');
 const filterAdminCategory = document.getElementById('filterAdminCategory');
@@ -403,38 +406,56 @@ async function saveFilterData() {
 
 // --- Публичный калькулятор ---
 
-function populateCategories() {
-  const categories = Object.keys(filterData);
-  categorySelect.innerHTML = '<option value="">Выберите категорию</option>' +
-    categories.map(c => `<option value="${c}">${c}</option>`).join('');
-  resetNodeAndIssue();
+// Обновляет внешний вид поля выбора: текст подписи, доступность и "заполненность".
+// Сам <select> невидим (см. .select в CSS), пользователь видит только подпись <p>.
+function setSelectUi(selectEl, labelEl, text, filled) {
+  if (!selectEl || !labelEl) return;
+  labelEl.textContent = text;
+  const box = selectEl.closest('.select');
+  if (!box) return;
+  box.classList.toggle('select-disabled', selectEl.disabled);
+  box.classList.toggle('select-filled', !!filled);
+}
+
+function resetIssue() {
+  issueSelect.innerHTML = '<option value="">Сначала выберите узел</option>';
+  issueSelect.disabled = true;
+  setSelectUi(issueSelect, issueLabel, 'Сначала выберите узел', false);
+  if (filterResult) filterResult.textContent = '';
+  if (filterResult1) filterResult1.textContent = '';
 }
 
 function resetNodeAndIssue() {
   nodeSelect.innerHTML = '<option value="">Сначала выберите категорию</option>';
   nodeSelect.disabled = true;
-  issueSelect.innerHTML = '<option value="">Сначала выберите узел</option>';
-  issueSelect.disabled = true;
-  if (filterResult) filterResult.textContent = '';
-  if (filterResult1) filterResult1.textContent = '';
+  setSelectUi(nodeSelect, nodeLabel, 'Сначала выберите категорию', false);
+  resetIssue();
+}
+
+function populateCategories() {
+  const categories = Object.keys(filterData);
+  categorySelect.innerHTML = '<option value="">Выберите категорию</option>' +
+    categories.map(c => `<option value="${c}">${c}</option>`).join('');
+  setSelectUi(categorySelect, categoryLabel, 'Выберите категорию', false);
+  resetNodeAndIssue();
 }
 
 if (categorySelect) {
   categorySelect.addEventListener('change', () => {
     const cat = categorySelect.value;
     if (!cat || !filterData[cat]) {
+      setSelectUi(categorySelect, categoryLabel, 'Выберите категорию', false);
       resetNodeAndIssue();
       return;
     }
+    setSelectUi(categorySelect, categoryLabel, cat, true);
+
     const nodes = Object.keys(filterData[cat]);
     nodeSelect.innerHTML = '<option value="">Выберите узел</option>' +
       nodes.map(n => `<option value="${n}">${n}</option>`).join('');
     nodeSelect.disabled = false;
-
-    issueSelect.innerHTML = '<option value="">Сначала выберите узел</option>';
-    issueSelect.disabled = true;
-    if (filterResult) filterResult.textContent = '';
-    if (filterResult1) filterResult1.textContent = '';
+    setSelectUi(nodeSelect, nodeLabel, 'Выберите узел', false);
+    resetIssue();
   });
 }
 
@@ -442,12 +463,18 @@ if (nodeSelect) {
   nodeSelect.addEventListener('change', () => {
     const cat = categorySelect.value;
     const node = nodeSelect.value;
-    if (!node || !filterData[cat] || !filterData[cat][node]) return;
+    if (!node || !filterData[cat] || !filterData[cat][node]) {
+      setSelectUi(nodeSelect, nodeLabel, 'Выберите узел', false);
+      resetIssue();
+      return;
+    }
+    setSelectUi(nodeSelect, nodeLabel, node, true);
 
     const services = filterData[cat][node];
     issueSelect.innerHTML = '<option value="">Выберите поломку</option>' +
       services.map((s, i) => `<option value="${i}">${s.name}</option>`).join('');
     issueSelect.disabled = false;
+    setSelectUi(issueSelect, issueLabel, 'Выберите поломку', false);
     if (filterResult) filterResult.textContent = '';
     if (filterResult1) filterResult1.textContent = '';
   });
@@ -459,6 +486,7 @@ if (issueSelect) {
     const node = nodeSelect.value;
     const idx = issueSelect.value;
     if (idx === '' || !filterData[cat] || !filterData[cat][node]) {
+      setSelectUi(issueSelect, issueLabel, 'Выберите поломку', false);
       if (filterResult) filterResult.textContent = '';
       if (filterResult1) filterResult1.textContent = '';
       return;
@@ -466,6 +494,7 @@ if (issueSelect) {
 
     const service = filterData[cat][node][idx];
     if (!service || !filterResult) return;
+    setSelectUi(issueSelect, issueLabel, service.name, true);
 
     const base = parseFloat(String(service.price).replace(/[^\d.]/g, '')) || 0;
     const low = Math.round(base);

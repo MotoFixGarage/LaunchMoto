@@ -315,23 +315,64 @@ body{
 .base h1{
     font-size: 45pt;
 }
-.baseinf select{
-    width: 220px;
-    margin-bottom: 3px;
-    border-radius: 25px;
-    background-color: rgba(0, 0, 0, 0.4);
-    color: #ffffffa1;
-    opacity:0;
-}
 .price p{
     padding-bottom: 50px;
 }
 
+/* Поля выбора фильтра: настоящий <select> невидим и лежит поверх подписи,
+   поэтому клик открывает нативный список, а подпись <p> можно менять из JS.
+   Состояния: .select-disabled — недоступно, .select-filled — значение выбрано. */
 .select{
-    border:rgba(98, 98, 98, 0.409) 1px solid;
-    border-radius:20px;
-    height:30px
+    position: relative;
+    width: 240px;
+    height: 34px;
+    box-sizing: border-box;
+    margin: 4px 0;
+    border: rgba(98, 98, 98, 0.409) 1px solid;
+    border-radius: 25px;
     background-color: rgba(0, 0, 0, 0.4);
+    transition: opacity 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+.select p{
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    padding: 0 14px;
+    max-width: none;
+    line-height: 32px;
+    font-size: 14px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    pointer-events: none;
+    color: #ffffffa1;
+}
+.select select{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+.select:not(.select-disabled):hover{
+    background-color: rgba(255, 255, 255, 0.25);
+}
+.select-filled{
+    border-color: rgba(255, 255, 255, 0.495);
+}
+.select-filled p{
+    color: #ffffff;
+}
+.select-disabled{
+    opacity: 0.4;
+    border-style: dashed;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+.select-disabled select{
+    cursor: not-allowed;
 }
 /* ==========================================================
    КНОПКИ (общие: расценки/позвонить/добавить/вход)
@@ -349,6 +390,14 @@ body{
     margin: 5px 5px 5px 5px;
     font-size: 12pt;
     transition: transform 0.3s ease;
+}
+/* Кнопка «позвонить» на всю ширину блока заявки (application.html) */
+.but_tel_wide{
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    margin: 20px 0 0 0;
 }
 .but_info{
     display: flex;
