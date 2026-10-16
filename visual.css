@@ -113,6 +113,8 @@ body{
     right: 0;
     height: 100vh;   /* запасной вариант для старых браузеров */
     height: 100lvh;
+    /* на телефонах высоту дополнительно фиксирует bg-lock.js */
+    will-change: transform;
     overflow: hidden;
     z-index:0;
     /* Старые строки (сохранены):
