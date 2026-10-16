@@ -21,11 +21,14 @@
 html{
     scroll-behavior: smooth;
     padding: 0px;
+    /* Фон теперь рисует только .background (см. ниже) — по схеме "fixed-слой на весь экран".
+       Старые строки сохранены (background-attachment: fixed на мобильных даёт рывки):
     background-image: url('img/fon6.JPG');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
     background-position: center center;
+    */
 }
 
 h1, h2, a, p{
@@ -40,11 +43,13 @@ body{
     box-sizing: border-box;
     padding: 0px;
     margin: 0px;
+    /* Старый фон body (перенесён на .background):
     background-image: url('img/fon6.JPG');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
     background-position: center center;
+    */
     background-color:#000;
 }
 
@@ -92,15 +97,33 @@ body{
     z-index:1;
 }
 
+/* Фиксированный фон. Схема как у «живых» лендингов: слой position:fixed,
+   растянутый по краям экрана (inset:0), а сама картинка — внутри него отдельным
+   слоем (::before). Без 100vh и 110% (они пересчитываются, когда на телефоне
+   сворачивается адресная строка) и без background-attachment: fixed. */
 .background{
-    width: 110%;
-    height: 100vh;
     position: fixed;
     inset:0;
+    overflow: hidden;
     z-index:0;
+    /* Старые строки (сохранены):
+    width: 110%;
+    height: 100vh;
     background-image: url('img/fon6.jpg');
     background-repeat: no-repeat;
     background-attachment: fixed;
+    background-size: cover;
+    background-position: center center;
+    */
+}
+
+.background::before{
+    content: '';
+    position: absolute;
+    inset: 0;
+    /* два написания имени файла: на хостингах с учётом регистра сработает то, что реально лежит в img/ */
+    background-image: url('img/fon6.jpg'), url('img/fon6.JPG');
+    background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
 }
