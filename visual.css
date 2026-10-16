@@ -131,7 +131,15 @@ body{
 .background::before{
     content: '';
     position: absolute;
-    inset: 0;
+    /* Высоту картинки задаёт bg-lock.js один раз с запасом (переменная --bg-img-h):
+       картинка выше видимого окна, а слой .background её обрезает. Когда адресная
+       строка сворачивается и окно растёт, картинка не масштабируется, а просто
+       открывается заранее подготовленная нижняя часть. Без JS — по высоте слоя (100%). */
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--bg-img-h, 100%);
+    /* было: inset: 0; */
     /* файл фона: img/fon6.jpg (регистр важен на хостингах) */
     background-image: url('img/fon6.jpg');
     background-repeat: no-repeat;
