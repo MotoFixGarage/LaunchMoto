@@ -190,7 +190,7 @@ body{
     width: 100%;
     margin-left: 5px;
     margin-right: 5px;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.279);
     border-radius: 25px;
     border: rgba(98, 98, 98, 0.409) 1px solid;
     display: flex;
@@ -225,7 +225,7 @@ body{
 /* --- Контентные блоки (из «ОСНОВНЫЕ БЛОКИ СТРАНИЦ») --- */
 
 .baseinf, .addTable{
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.279);
     border-radius: 25px;
     border: rgba(98, 98, 98, 0.409) 1px solid;
     display: flex;
