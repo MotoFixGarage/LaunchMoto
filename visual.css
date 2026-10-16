@@ -190,7 +190,7 @@ body{
     width: 100%;
     margin-left: 5px;
     margin-right: 5px;
-    background-color: rgba(0, 0, 0, 0.279);
+    background-color: rgba(0, 0, 0, 0.4);
     border-radius: 25px;
     border: rgba(98, 98, 98, 0.409) 1px solid;
     display: flex;
@@ -225,7 +225,7 @@ body{
 /* --- Контентные блоки (из «ОСНОВНЫЕ БЛОКИ СТРАНИЦ») --- */
 
 .baseinf, .addTable{
-    background-color: rgba(0, 0, 0, 0.279);
+    background-color: rgba(0, 0, 0, 0.4);
     border-radius: 25px;
     border: rgba(98, 98, 98, 0.409) 1px solid;
     display: flex;
@@ -244,6 +244,18 @@ body{
     flex-direction: column;
     justify-content: center;
     display: flex;
+}
+
+/* Текстовый блок внутри блока с картинками (index.html): тот же общий стиль .baseinf,
+   но не на всю ширину + отступы под рамку .imagediv; тексту снимаем max-width: 50vw */
+.imagediv .baseinf{
+    width: auto;
+    margin: 10px 10px 0 10px;
+}
+
+.imagediv .baseinf p{
+    max-width: none;
+    margin: 0 20px 20px 20px;
 }
 
 /* ==========================================================
@@ -716,7 +728,7 @@ button img{
 .image{
     display: flex;
     height: 300px;
-    margin: 10px;
+    margin: 12px;
     gap: 20px;
     overflow-x: auto;
     scroll-behavior: smooth;
@@ -727,7 +739,7 @@ button img{
 .image img{
     border-radius: 0.7vw;
     flex-shrink: 0;
-    border-radius: 20px;
+    border-radius: 15px;
     filter: brightness(0.75) contrast(1.1) saturate(0.8);
 }
 
