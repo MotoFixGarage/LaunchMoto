@@ -29,8 +29,9 @@
     maxH = Math.max(
       maxH,
       window.innerHeight || 0,
-      document.documentElement.clientHeight || 0,
-      (window.screen && window.screen.height) || 0   // высота всего экрана устройства
+      document.documentElement.clientHeight || 0
+      // было: (window.screen && window.screen.height) || 0  — высота всего экрана устройства
+      // (убрано: на iPhone давало чёрные полосы сверху и снизу)
     );
     bg.style.height = maxH + 'px';
   }
