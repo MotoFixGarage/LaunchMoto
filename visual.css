@@ -21,8 +21,17 @@
 html{
     scroll-behavior: smooth;
     padding: 0px;
-    /* Фон теперь рисует только .background (см. ниже) — по схеме "fixed-слой на весь экран".
-       Старые строки сохранены (background-attachment: fixed на мобильных даёт рывки):
+    /* Основной фон рисует слой .background (см. ниже). Здесь — ЗАПАСНОЙ фон холста:
+       на iPhone (Safari) страница заходит под полупрозрачные панели (статус-бар сверху,
+       адресная строка снизу), а fixed-слой туда не достаёт — без запасного фона
+       там была бы просто чёрная заливка. Обычный (не fixed) фон, поэтому рывков не даёт.
+       Имя файла указано в двух написаниях (.jpg/.JPG), сработает существующее. */
+    background-color: #000;
+    background-image: url('img/fon6.jpg'), url('img/fon6.JPG');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center top;
+    /* Прежний вариант (background-attachment: fixed на мобильных даёт рывки):
     background-image: url('img/fon6.JPG');
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -50,7 +59,10 @@ body{
     background-size: cover;
     background-position: center center;
     */
+    /* Чёрный цвет перенесён на html: иначе body закрашивал бы холст чёрным
+       и запасной фон html не был бы виден под панелями iPhone.
     background-color:#000;
+    */
 }
 
 /* ==========================================================
