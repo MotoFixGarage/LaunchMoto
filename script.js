@@ -1,4 +1,4 @@
-const API_URL = 'https://script.google.com/macros/s/AKfycbyCiFlvicIuRwg0iBf6NAV3Z9IEhZ_DBqv_7nFPdh_46SC2jObXoCK-qsOD-fOHYJIl/exec'; // твой URL из деплоя
+const API_URL = 'https://script.google.com/macros/s/AKfycbyb3M2gzdOzG94f1nthzo1QQ5_ftxmLXSab9PmBhDUuoY5sAmdG-CICkrm9m-9GyZ1U/exec'; // твой URL из деплоя
 
 const searchInput = document.getElementById('searchInput');
 const clientsList = document.getElementById('clientsList');
@@ -202,6 +202,32 @@ function sumVisits(visits) {
   }, 0);
 }
 
+// Мягкая прокрутка: встроенный smooth в браузерах быстрый и не настраивается,
+// поэтому анимируем сами — с плавным разгоном и торможением (easeInOutCubic).
+// Элемент ставится по центру экрана; если он выше экрана — по верхнему краю с небольшим отступом.
+// behavior:'instant' нужен, чтобы CSS-правило html{scroll-behavior:smooth} не мешало покадровой анимации.
+function smoothScrollToCenter(el, duration = 1200) {
+  const rect = el.getBoundingClientRect();
+  const startY = window.scrollY;
+  let targetY = rect.height >= window.innerHeight
+    ? startY + rect.top - 20
+    : startY + rect.top + rect.height / 2 - window.innerHeight / 2;
+  const maxY = document.documentElement.scrollHeight - window.innerHeight;
+  targetY = Math.max(0, Math.min(targetY, maxY));
+  const dist = targetY - startY;
+  if (Math.abs(dist) < 2) return;
+
+  const t0 = performance.now();
+  const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+  function step(now) {
+    const t = Math.min((now - t0) / duration, 1);
+    window.scrollTo({ top: startY + dist * ease(t), behavior: 'instant' });
+    if (t < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
 function renderClients(clients) {
   if (!clientsList) return;
   clientsList.innerHTML = '';
@@ -223,6 +249,21 @@ function renderClients(clients) {
       ${visitsHtml}
       <p><b>Всего потрачено: ${total} ₽</b></p>
     `;
+
+    // Кнопка «Добавить»: переносит имя и номер клиента в форму добавления
+    // и прокручивает страницу к ней — чтобы не вводить данные заново.
+    const fillBtn = document.createElement('button');
+    fillBtn.className = 'addBtn';
+    fillBtn.textContent = 'Добавить продажу';
+    fillBtn.addEventListener('click', () => {
+      const nameInput = document.getElementById('name');
+      const phoneInput = document.getElementById('phone');
+      if (nameInput) nameInput.value = group.name || '';
+      if (phoneInput) phoneInput.value = formatPhone(group.phone);
+      if (crmPanel) smoothScrollToCenter(crmPanel, 1200);
+    });
+    card.appendChild(fillBtn);
+
     clientsList.appendChild(card);
   });
 }
@@ -652,6 +693,35 @@ function findService(cat, node, name) {
   return filterData[cat][node].find(s => s.name === name) || null;
 }
 
+// Режим таблицы: false — текст (просмотр), true — поля ввода (редактирование).
+let filterTableEditMode = false;
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, ch => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]
+  ));
+}
+
+// Кнопка переключения режима — над таблицей (внутри обёртки, перед самой таблицей).
+// sticky + left:0 — чтобы кнопка не уезжала при горизонтальной прокрутке широкой таблицы.
+if (filterTableWrap && filterPriceTable) {
+  const editBar = document.createElement('div');
+  editBar.className = 'tableEditBar';
+  editBar.style.cssText = 'position: sticky; left: 0; display: flex; justify-content: center;';
+
+  const editToggleBtn = document.createElement('button');
+  editToggleBtn.className = 'addBtn';
+  editToggleBtn.textContent = 'Редактировать таблицу';
+  editToggleBtn.addEventListener('click', () => {
+    filterTableEditMode = !filterTableEditMode;
+    editToggleBtn.textContent = filterTableEditMode ? 'Готово' : 'Редактировать таблицу';
+    renderFilterPriceTable();
+  });
+
+  editBar.appendChild(editToggleBtn);
+  filterTableWrap.insertBefore(editBar, filterPriceTable);
+}
+
 function renderFilterPriceTable() {
   if (!filterPriceTable) return;
 
@@ -667,18 +737,25 @@ function renderFilterPriceTable() {
     categories.map(c => `<th><p>${c}</p></th>`).join('') +
     '</tr>';
 
+  // Обычный режим — просто текст; режим редактирования (кнопка над таблицей) — поля ввода.
   nodeOrder.forEach(node => {
     html += `<tr class="node-header"><th colspan="${categories.length + 1}">` +
-      `<input type="text" class="node-header-cell" data-old-node="${node}" value="${node}">` +
+      (filterTableEditMode
+        ? `<input type="text" class="node-header-cell" data-old-node="${node}" value="${node}">`
+        : `<p>${escapeHtml(node)}</p>`) +
       '</th></tr>';
 
     nodeServices[node].forEach(name => {
       html += '<tr>';
-      html += `<td><input type="text" class="name-cell" data-node="${node}" data-old-name="${name}" value="${name}"></td>`;
+      html += filterTableEditMode
+        ? `<td><input type="text" class="name-cell" data-node="${node}" data-old-name="${name}" value="${name}"></td>`
+        : `<td><p>${escapeHtml(name)}</p></td>`;
       categories.forEach(cat => {
         const service = findService(cat, node, name);
         const value = service ? service.price : '';
-        html += `<td><input type="text" class="price-cell" data-cat="${cat}" data-node="${node}" data-name="${name}" value="${value}" placeholder="—"></td>`;
+        html += filterTableEditMode
+          ? `<td><input type="text" class="price-cell" data-cat="${cat}" data-node="${node}" data-name="${name}" value="${value}" placeholder="—"></td>`
+          : `<td><p>${value === '' ? '—' : escapeHtml(value)}</p></td>`;
       });
       html += '</tr>';
     });

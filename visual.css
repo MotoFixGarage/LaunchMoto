@@ -469,7 +469,9 @@ input:hover{
 .clientsList{
     display: flex;
     flex-wrap: wrap;
-    
+    justify-content: center; /* карточки по центру, а не прижатыми к левому краю */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .crm{
@@ -486,6 +488,34 @@ input:hover{
     align-items: center;
     padding: 10px;
 
+}
+
+/* Карточки клиентов/заявок/услуг — одинаковой ширины на всех экранах.
+   Тексту внутри снимаем max-width: 50vw (из .base h1, p) — иначе он прижимается влево. */
+.client-card{
+    width: min(340px, calc(100% - 20px));
+    box-sizing: border-box;
+}
+
+.client-card p{
+    max-width: none;
+}
+
+/* Кнопка внизу карточки: карточки в одном ряду одной высоты, кнопка прижата к нижней границе */
+.client-card{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Отступ между текстом и кнопкой (минимальный, если карточка выше за счёт соседней) */
+.client-card p:last-of-type{
+    margin-bottom: 30px;
+}
+
+.client-card .addBtn{
+    margin-top: auto;
+    margin-bottom: 10px;
 }
 
 .addTableIn{
@@ -791,6 +821,10 @@ button img{
     }
     .addTableIn{
         flex-direction: column;
+    }
+    /* карточки клиентов на телефоне: уже на равных отступах (ширину задаёт .client-card) */
+    .clientsList div{
+        margin: 10px;
     }
     .image{
         height: 200px;
