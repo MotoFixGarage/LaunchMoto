@@ -9,7 +9,23 @@ const crmPanel = document.getElementById('crmPanel');
 const loginBtn = document.getElementById('loginBtn');
 const adminPass = document.getElementById('adminPass');
 
-let ADMIN_KEY = sessionStorage.getItem('adminKey') || '';
+// Ключ админа хранится в localStorage — вход сохраняется в браузере и после закрытия вкладки.
+// (раньше был sessionStorage — жил только до закрытия вкладки; старое значение подхватываем один раз).
+// try/catch — в приватном режиме или при заблокированных данных сайта хранилище может быть недоступно.
+const adminKeyStore = {
+  get() {
+    try { return localStorage.getItem('adminKey') || sessionStorage.getItem('adminKey') || ''; }
+    catch (e) { return ''; }
+  },
+  set(key) {
+    try { localStorage.setItem('adminKey', key); } catch (e) {}
+  },
+  remove() {
+    try { localStorage.removeItem('adminKey'); sessionStorage.removeItem('adminKey'); } catch (e) {}
+  }
+};
+
+let ADMIN_KEY = adminKeyStore.get();
 let searchController = null;
 
 // ==========================================================
@@ -126,13 +142,13 @@ async function tryLogin(key) {
 
   if (data && data.error) {
     alert('Неверный пароль');
-    sessionStorage.removeItem('adminKey');
+    adminKeyStore.remove();
     showLogin();
     return false;
   }
 
   ADMIN_KEY = key;
-  sessionStorage.setItem('adminKey', key);
+  adminKeyStore.set(key);
   showCrm();
   if (clientsList) clientsList.innerHTML = '';
   return true;
@@ -280,7 +296,7 @@ async function loadClients(query = '') {
     const data = await res.json();
 
     if (data && data.error) {
-      sessionStorage.removeItem('adminKey');
+      adminKeyStore.remove();
       showLogin();
       return;
     }
